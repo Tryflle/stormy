@@ -1,0 +1,8 @@
+{
+  "mixinConfigs": [
+    "raven.mixins.json"
+  ],
+  "entrypoints": [
+    "me.zircta.raven.Main"
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "compatibilityLevel": "JAVA_8",
+  "package": "me.zircta.raven.mixins",
+  "mixins": [
+    "EntityLivingBaseMixin",
+    "EntityPlayerSPMixin",
+    "MinecraftMixin",
+    "RendererLivingEntityMixin",
+    "RenderGlobalMixin"
+  ]
+}
