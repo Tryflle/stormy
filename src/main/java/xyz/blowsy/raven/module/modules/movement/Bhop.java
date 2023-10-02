@@ -16,12 +16,12 @@ public class Bhop extends Module {
 
     public Bhop() {
         super("Bhop", ModuleCategory.Movement, 0);
-        this.registerSetting(new DescriptionSetting("Blatant speed, use ~1.5 for NCP."));
+        this.registerSetting(new DescriptionSetting("Blatant speed, use ~1.6 for NCP."));
         this.registerSetting(Speed = new SliderSetting("Speed", 1.0D, 0.5D, 5.0D, 0.01D));
     }
 
     private final KeyBinding[] moveKeys = new KeyBinding[]{
-            mc.gameSettings.keyBindForward, mc.gameSettings.keyBindBack, mc.gameSettings.keyBindRight, mc.gameSettings.keyBindLeft
+            mc.gameSettings.keyBindForward
     };
 
     @SubscribeEvent

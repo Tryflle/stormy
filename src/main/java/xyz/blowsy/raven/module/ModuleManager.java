@@ -46,6 +46,7 @@ public class ModuleManager {
       addModule(new Blink());
       addModule(new Bhop());
       addModule(new Killaura());
+      addModule(new AntiVoid());
 
       initialized = true;
    }
