@@ -159,6 +159,6 @@ public abstract class Module {
    }
 
    public enum ModuleCategory {
-      Combat, Movement, Player, Render, combat, Client
+      Combat, Movement, Player, Render, Client
    }
 }
