@@ -5,18 +5,14 @@ import me.zircta.raven.events.LivingUpdateEvent;
 import xyz.blowsy.raven.module.Module;
 import xyz.blowsy.raven.utils.Utils;
 import xyz.blowsy.raven.module.setting.impl.SliderSetting;
-import xyz.blowsy.raven.module.setting.impl.TickSetting;
 
 public class Velocity extends Module {
    public static SliderSetting horizontal, vertical, chance, tickDelay;
-   public static TickSetting invertHorizontal, invertVertical;
 
    public Velocity() {
       super("Velocity", Module.ModuleCategory.Combat, 0);
       this.registerSetting(horizontal = new SliderSetting("Horizontal", 90.0D, 0.0D, 200.0D, 1.0D));
-      this.registerSetting(invertHorizontal = new TickSetting("Invert Horizontal", false));
       this.registerSetting(vertical = new SliderSetting("Vertical", 100.0D, 0.0D, 200.0D, 1.0D));
-      this.registerSetting(invertVertical = new TickSetting("Invert Vertical", false));
       this.registerSetting(chance = new SliderSetting("Chance", 100.0D, 0.0D, 100.0D, 1.0D));
       this.registerSetting(tickDelay = new SliderSetting("Tick Delay", 0.0D, 0.0D, 20.0D, 1.0D));
    }
