@@ -13,6 +13,7 @@ import java.awt.*;
 public class ClickAssist extends Module {
    public static SliderSetting chance;
    public static TickSetting cpsCheck;
+   private boolean clickCheck = false;
 
    public ClickAssist() {
       super("ClickAssist", ModuleCategory.Combat, 0);
@@ -25,9 +26,13 @@ public class ClickAssist extends Module {
    @SubscribeEvent
    public void whyClick(MouseEvent e) throws AWTException {
       if (e.getButton() == 0 && Utils.Player.isPlayerInGame()) {
-         Robot robot = new Robot();
-         robot.mousePress(16);
-         robot.mouseRelease(16);
+         clickCheck = true;
+         if (clickCheck) {
+            Robot robot = new Robot();
+            robot.mousePress(16);
+            robot.mouseRelease(16);
+            clickCheck = false;
+         }
       }
    }
 }
