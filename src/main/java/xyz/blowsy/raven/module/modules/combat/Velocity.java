@@ -8,6 +8,7 @@ import xyz.blowsy.raven.module.setting.impl.SliderSetting;
 
 public class Velocity extends Module {
    public static SliderSetting horizontal, vertical, chance, tickDelay;
+   //skidded from legit-ish
 
    public Velocity() {
       super("Velocity", Module.ModuleCategory.Combat, 0);
