@@ -47,6 +47,9 @@ public class ModuleManager {
       addModule(new Bhop());
       addModule(new Killaura());
       addModule(new AntiVoid());
+      addModule(new Sprint());
+      addModule(new AutoDodge());
+      addModule(new PingSpoof());
 
       initialized = true;
    }

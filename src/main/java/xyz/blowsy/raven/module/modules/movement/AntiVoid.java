@@ -19,7 +19,7 @@ public class AntiVoid extends Module {
     public AntiVoid() {
         super("AntiVoid", ModuleCategory.Movement, 0);
         this.registerSetting(new DescriptionSetting("Prevents falling in the void."));
-        this.registerSetting(mode = new ComboSetting<>("Mode", modes.ManualFlag));
+        this.registerSetting(mode = new ComboSetting<>("Mode", modes.AutoFlag));
         this.registerSetting(fallDist = new SliderSetting("AutoFlag Fall Distance", 5.0D, 1.0D, 50.0D, 1.0D));
         this.registerSetting(AutoDisable = new TickSetting("AutoDisable", true));
     }
@@ -36,12 +36,13 @@ public class AntiVoid extends Module {
             }
         }
         if (Utils.Player.isPlayerInGame() && mode.getMode() == modes.ManualFlag) {
-                mc.thePlayer.motionY = 0;
-                if (AutoDisable.isToggled()) {
-                    this.toggle();
-                }
+            mc.thePlayer.motionY = 0;
+            if (AutoDisable.isToggled()) {
+                this.toggle();
             }
         }
+    }
+
     public enum modes {
         ManualFlag, AutoFlag
     }

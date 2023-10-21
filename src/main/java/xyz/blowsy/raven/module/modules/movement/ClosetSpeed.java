@@ -1,6 +1,7 @@
 package xyz.blowsy.raven.module.modules.movement;
 
 import me.zircta.raven.events.LivingUpdateEvent;
+import net.minecraft.client.settings.KeyBinding;
 import net.weavemc.loader.api.event.SubscribeEvent;
 import net.weavemc.loader.api.event.TickEvent;
 import xyz.blowsy.raven.module.Module;
@@ -9,7 +10,7 @@ import xyz.blowsy.raven.module.setting.impl.TickSetting;
 
 public class ClosetSpeed extends Module {
 
-    public static TickSetting speed, timer, njd;
+    public static TickSetting speed, timer, njd, jump;
 
     public ClosetSpeed() {
         super("ClosetSpeed", ModuleCategory.Movement, 0);
@@ -17,6 +18,7 @@ public class ClosetSpeed extends Module {
         this.registerSetting(speed = new TickSetting("Legit Speed", true));
         this.registerSetting(timer = new TickSetting("Legit Timer", true));
         this.registerSetting(njd = new TickSetting("No Jump Delay", true));
+        this.registerSetting(jump = new TickSetting("Hold Jump", true));
     }
 
     @Override
@@ -50,6 +52,19 @@ public class ClosetSpeed extends Module {
         if (mc.thePlayer != null) {
             if (njd.isToggled()) {
                 mc.thePlayer.jumpTicks = 0;
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void legitJump(TickEvent e) {
+        if (mc.thePlayer != null) {
+            if (jump.isToggled() && !mc.thePlayer.isSneaking())  {
+                if (mc.gameSettings.keyBindForward.isKeyDown() || mc.gameSettings.keyBindBack.isKeyDown() ||mc.gameSettings.keyBindLeft.isKeyDown() || mc.gameSettings.keyBindRight.isKeyDown()) {
+                    KeyBinding.setKeyBindState(mc.gameSettings.keyBindJump.getKeyCode(), true);
+                } else {
+                    KeyBinding.setKeyBindState(mc.gameSettings.keyBindJump.getKeyCode(), false);
+                }
             }
         }
     }

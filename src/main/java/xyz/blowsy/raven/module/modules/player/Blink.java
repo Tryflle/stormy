@@ -2,7 +2,12 @@ package xyz.blowsy.raven.module.modules.player;
 
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.network.Packet;
-import net.weavemc.loader.api.event.*;
+import net.weavemc.loader.api.event.ShutdownEvent;
+import net.weavemc.loader.api.event.StartGameEvent;
+import net.weavemc.loader.api.event.SubscribeEvent;
+import net.weavemc.loader.api.event.WorldEvent;
+import me.zircta.raven.events.EventDirection;
+import me.zircta.raven.events.PacketEvent;
 import xyz.blowsy.raven.module.Module;
 import xyz.blowsy.raven.module.setting.impl.DescriptionSetting;
 import xyz.blowsy.raven.module.setting.impl.TickSetting;
@@ -10,26 +15,37 @@ import xyz.blowsy.raven.module.setting.impl.TickSetting;
 import java.util.ArrayList;
 
 public class Blink extends Module {
-    public static TickSetting spawnFake;
-    private final ArrayList<Packet<?>> outboundPackets = new ArrayList<>();
+    public static TickSetting inbound, outbound, spawnFake;
+
+    private final ArrayList<? extends Packet> outboundPackets = new ArrayList<>();
+    private final ArrayList<? extends Packet> inboundPackets = new ArrayList<>();
     private static EntityOtherPlayerMP fakePlayer;
 
     public Blink() {
         super("Blink", ModuleCategory.Player, 0);
-        this.registerSetting(new DescriptionSetting("Chokes outbound packets"));
-        this.registerSetting(spawnFake = new TickSetting("Spawn Fake", true));
+        this.registerSetting(new DescriptionSetting("Chokes packets until disabled."));
+        this.registerSetting(inbound = new TickSetting("Block Inbound", true));
+        this.registerSetting(outbound = new TickSetting("Block Outbound", true));
+        this.registerSetting(spawnFake = new TickSetting("Spawn fake player", true));
     }
 
     @SubscribeEvent
-    public void onPacket(PacketEvent.Receive e) {
-        outboundPackets.add(e.getPacket());
+    public void onPacket(PacketEvent e) {
+        if (e.getDirection() == EventDirection.INCOMING) {
+            if (!inbound.isToggled()) return;
+            inboundPackets.add(e.getPacket());
+        } else {
+            if (!outbound.isToggled()) return;
+            if (!e.getPacket().getClass().getCanonicalName().startsWith("net.minecraft.network.play.client")) return;
+            outboundPackets.add(e.getPacket());
+        }
         e.setCancelled(true);
     }
-
 
     @Override
     public void onEnable() {
         outboundPackets.clear();
+        inboundPackets.clear();
         if (spawnFake.isToggled()) {
             if (mc.thePlayer != null) {
                 fakePlayer = new EntityOtherPlayerMP(mc.theWorld, mc.thePlayer.getGameProfile());
@@ -42,11 +58,12 @@ public class Blink extends Module {
 
     @Override
     public void onDisable() {
-        for (Packet<?> packet : outboundPackets) {
+        for (Packet packet : outboundPackets) {
             mc.getNetHandler().addToSendQueue(packet);
         }
 
         outboundPackets.clear();
+        inboundPackets.clear();
         if (fakePlayer != null) {
             mc.theWorld.removeEntityFromWorld(fakePlayer.getEntityId());
             fakePlayer = null;
