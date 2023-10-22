@@ -1,7 +1,6 @@
 package xyz.blowsy.raven.module.modules.combat;
 
 import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.util.ChatComponentText;
 import net.weavemc.loader.api.event.RenderHandEvent;
 import net.weavemc.loader.api.event.SubscribeEvent;
 import xyz.blowsy.raven.module.Module;
@@ -13,11 +12,10 @@ import org.lwjgl.input.Mouse;
 
 @SuppressWarnings("unused")
 public class AutoClicker extends Module {
-    public static TickSetting weaponOnly, breakBlocks, inventoryFill;
+    public static TickSetting breakBlocks;
     public static SliderSetting leftCPS;
     public boolean shouldClick = false;
     long lastClickTime = 0;
-    long wow = 0;
     int lmb = mc.gameSettings.keyBindAttack.getKeyCode();
 
     public boolean delaying = false;
