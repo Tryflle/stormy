@@ -1,6 +1,7 @@
 package xyz.blowsy.raven.module.modules.player;
 
 import net.minecraft.scoreboard.ScorePlayerTeam;
+import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.weavemc.loader.api.event.SubscribeEvent;
@@ -27,10 +28,15 @@ public class AutoDodge extends Module {
         if (shouldNotify && Utils.Player.isPlayerInGame()) {
             for (ScorePlayerTeam team : mc.theWorld.getScoreboard().getTeams()) {
                 String teamName = team.getRegisteredName();
-                mc.thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.DARK_PURPLE + "Raven:" + EnumChatFormatting.AQUA + "Team: " + teamName));
+                mc.thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.DARK_PURPLE + "Raven: " + EnumChatFormatting.AQUA + "Team: " + teamName));
                 shouldNotify = false;
             }
         }
+    }
+
+    public void di(NetworkPlayerInfo o1, NetworkPlayerInfo o2) {
+        long team1 = o1.getPlayerTeam().func_98299_i();
+        long team2 = o2.getPlayerTeam().func_98299_i();
     }
 
     @SubscribeEvent
