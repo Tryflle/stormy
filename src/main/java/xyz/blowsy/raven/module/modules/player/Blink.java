@@ -2,10 +2,7 @@ package xyz.blowsy.raven.module.modules.player;
 
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.network.Packet;
-import net.weavemc.loader.api.event.ShutdownEvent;
-import net.weavemc.loader.api.event.StartGameEvent;
-import net.weavemc.loader.api.event.SubscribeEvent;
-import net.weavemc.loader.api.event.WorldEvent;
+import net.weavemc.loader.api.event.*;
 import me.zircta.raven.events.EventDirection;
 import me.zircta.raven.events.PacketEvent;
 import xyz.blowsy.raven.module.Module;
@@ -58,6 +55,7 @@ public class Blink extends Module {
 
     @Override
     public void onDisable() {
+        EventBus.unsubscribe(this);
         for (Packet packet : outboundPackets) {
             mc.getNetHandler().addToSendQueue(packet);
         }
