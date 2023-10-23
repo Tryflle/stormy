@@ -5,7 +5,10 @@ import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.SliderSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
 import dev.stormy.client.utils.Utils;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 import net.weavemc.loader.api.event.RenderHandEvent;
 import net.weavemc.loader.api.event.SubscribeEvent;
 import org.lwjgl.input.Mouse;
@@ -14,7 +17,7 @@ import org.lwjgl.input.Mouse;
 public class AutoClicker extends Module {
     public static TickSetting breakBlocks;
     public static SliderSetting leftCPS;
-    public boolean shouldClick = false;
+    public boolean shouldClick, breakHeld = false;
     long lastClickTime = 0;
     int lmb = mc.gameSettings.keyBindAttack.getKeyCode();
 
@@ -27,11 +30,34 @@ public class AutoClicker extends Module {
         this.registerSetting(breakBlocks = new TickSetting("Break blocks", false));
     }
 
+    public boolean breakBlock() {
+        if (breakBlocks.isToggled() && mc.objectMouseOver != null) {
+            BlockPos p = mc.objectMouseOver.getBlockPos();
+
+            if (p != null) {
+                if (mc.theWorld.getBlockState(p).getBlock() != Blocks.air && !(mc.theWorld.getBlockState(p).getBlock() instanceof BlockLiquid)) {
+                    if (!breakHeld) {
+                        int e = mc.gameSettings.keyBindAttack.getKeyCode();
+                        KeyBinding.setKeyBindState(e, true);
+                        KeyBinding.onTick(e);
+                        breakHeld = true;
+                    }
+                    return true;
+                }
+                if(breakHeld) {
+                    breakHeld = false;
+                }
+            }
+        }
+        return false;
+    }
+
     @SubscribeEvent
     public void bop(RenderHandEvent e) {
         randomizer();
 
         if (Utils.Player.isPlayerInGame() && Mouse.isButtonDown(0) && shouldClick && mc.currentScreen == null) {
+            if (breakBlock()) return;
             long currentTime = System.currentTimeMillis();
             int delay = 1000 / (int) leftCPS.getInput();
 
