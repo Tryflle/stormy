@@ -1,4 +1,4 @@
-rootProject.name = "Raven"
+rootProject.name = "Stormy"
 
 pluginManagement {
     repositories {

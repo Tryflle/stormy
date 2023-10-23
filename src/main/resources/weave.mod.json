@@ -1,8 +1,11 @@
 {
   "mixinConfigs": [
-    "raven.mixins.json"
+    "stormy.mixins.json"
   ],
   "entrypoints": [
-    "me.zircta.raven.Main"
+    "me.tryfle.stormy.Main"
+  ],
+  "hooks": [
+    "me.tryfle.stormy.hooks.CPSHook"
   ]
 }
