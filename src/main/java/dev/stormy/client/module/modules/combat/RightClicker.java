@@ -29,12 +29,19 @@ public class RightClicker extends Module {
       this.registerSetting(eatFood = new TickSetting("Whitelist Food", false));
    }
 
+   public boolean isFood() {
+      if (mc.thePlayer.getHeldItem() != null) {
+         if (eatFood.isToggled() && mc.thePlayer.getHeldItem().getItem() instanceof ItemFood) {
+            return true;
+         } else return false;
+      } else return false;
+   }
    @SubscribeEvent
    public void bop(RenderHandEvent e) {
       randomizer();
 
       if (Utils.Player.isPlayerInGame() && Mouse.isButtonDown(1) && shouldClick && mc.currentScreen == null) {
-         if (mc.thePlayer.getHeldItem().getItem() != null && eatFood.isToggled() && mc.thePlayer.getHeldItem().getItem() instanceof ItemFood) {
+         if (isFood()) {
             return;
          }
          long currentTime = System.currentTimeMillis();
