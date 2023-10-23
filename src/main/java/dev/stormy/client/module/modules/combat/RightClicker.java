@@ -34,7 +34,7 @@ public class RightClicker extends Module {
       randomizer();
 
       if (Utils.Player.isPlayerInGame() && Mouse.isButtonDown(1) && shouldClick && mc.currentScreen == null) {
-         if (eatFood.isToggled() && mc.thePlayer.getHeldItem().getItem() instanceof ItemFood) {
+         if (mc.thePlayer.getHeldItem().getItem() != null && eatFood.isToggled() && mc.thePlayer.getHeldItem().getItem() instanceof ItemFood) {
             return;
          }
          long currentTime = System.currentTimeMillis();
