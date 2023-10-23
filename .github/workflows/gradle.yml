@@ -32,6 +32,6 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           automatic_release_tag: "latest"
           prerelease: false
-          title: "Raven ${{ env.sha_short }}"
+          title: "Stormy ${{ env.sha_short }}"
           files: |
             build/libs/*.jar
