@@ -14,7 +14,7 @@ import org.lwjgl.input.Mouse;
 @SuppressWarnings("unused")
 public class RightClicker extends Module {
    public static SliderSetting rCPS;
-   public static TickSetting eatFood;
+   public static TickSetting eatFood, noSword;
    public boolean shouldClick = false;
    long lastClickTime = 0;
    long wow = 0;
@@ -27,13 +27,12 @@ public class RightClicker extends Module {
       this.registerSetting(new DescriptionSetting("Click automatically"));
       this.registerSetting(rCPS = new SliderSetting("CPS", 10.0D, 1.0D, 20.0D, 1.0D));
       this.registerSetting(eatFood = new TickSetting("Whitelist Food", false));
+      this.registerSetting(noSword = new TickSetting("Whitelist Weapons", false));
    }
 
    public boolean isFood() {
       if (mc.thePlayer.getHeldItem() != null) {
-         if (eatFood.isToggled() && mc.thePlayer.getHeldItem().getItem() instanceof ItemFood) {
-            return true;
-         } else return false;
+          return eatFood.isToggled() && mc.thePlayer.getHeldItem().getItem() instanceof ItemFood;
       } else return false;
    }
    @SubscribeEvent
@@ -42,6 +41,9 @@ public class RightClicker extends Module {
 
       if (Utils.Player.isPlayerInGame() && Mouse.isButtonDown(1) && shouldClick && mc.currentScreen == null) {
          if (isFood()) {
+            return;
+         }
+         if (Utils.Player.isPlayerInGame() && noSword.isToggled() && Utils.Player.isPlayerHoldingWeapon()) {
             return;
          }
          long currentTime = System.currentTimeMillis();

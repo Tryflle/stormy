@@ -9,6 +9,8 @@ import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
+import net.weavemc.loader.api.event.EventBus;
+import net.weavemc.loader.api.event.MouseEvent;
 import net.weavemc.loader.api.event.RenderHandEvent;
 import net.weavemc.loader.api.event.SubscribeEvent;
 import org.lwjgl.input.Mouse;
@@ -88,6 +90,7 @@ public class AutoClicker extends Module {
             lastClickTime = currentTime;
             KeyBinding.setKeyBindState(lmb, false);
             KeyBinding.onTick(lmb);
+            EventBus.callEvent(new MouseEvent());
             Utils.HookUtils.setMouseButtonState(0, false);
             delaying = false;
             shouldClick = false;

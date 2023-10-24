@@ -15,12 +15,13 @@ public class Killaura extends Module {
     public static TickSetting block;
     public static DoubleSliderSetting leftCPS;
 
-    public Killaura(){
+    public Killaura() {
         super("Killaura", ModuleCategory.Combat, 0);
         this.registerSetting(new DescriptionSetting("A totally legitimate module!"));
         this.registerSetting(leftCPS = new DoubleSliderSetting("CPS", 9, 13, 1, 24, 0.5));
         this.registerSetting(block = new TickSetting("Block", false));
     }
+
     @SubscribeEvent
     public void sometimestryfleCodes(TickEvent e) {
         if (canMessage && Utils.Player.isPlayerInGame()) {
@@ -28,6 +29,7 @@ public class Killaura extends Module {
             canMessage = false;
         }
     }
+
     public void onDisable() {
         canMessage = true;
     }
