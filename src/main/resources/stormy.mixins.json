@@ -8,6 +8,7 @@
       "MinecraftMixin",
       "RendererLivingEntityMixin",
       "RenderGlobalMixin",
-      "NetworkManagerMixin"
+      "NetworkManagerMixin",
+      "EntityPlayerMixin"
     ]
     }
