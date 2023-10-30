@@ -1,5 +1,5 @@
 # Stormy
-- Based on an early build of https://github.com/syz66/illusion (Which is based on raven)
+- Based on an early build of https://github.com/syz66/illusion (Which is based on raven). Goodbye, Syz. Thanks for inspiring me to start developing.
 - ClickGUI key is ENTER.
 - Made for Weave mod loader
 ## Goal
