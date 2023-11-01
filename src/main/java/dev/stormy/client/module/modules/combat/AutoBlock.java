@@ -25,7 +25,7 @@ public class AutoBlock extends Module {
 
     @SubscribeEvent
     public void onAttack(TickEvent e) {
-        if (Utils.Player.isPlayerInGame() && Utils.Player.isPlayerHoldingWeapon() && Mouse.isButtonDown(0)) {
+        if (Utils.Player.isPlayerInGame() && Utils.Player.isPlayerHoldingWeapon() && Mouse.isButtonDown(0) && mc.currentScreen == null) {
             KeyBinding.setKeyBindState(block, true);
             KeyBinding.onTick(block);
             delaying = true;
@@ -48,7 +48,7 @@ public class AutoBlock extends Module {
     }
     @SubscribeEvent
     public void unblockthings(TickEvent e) {
-        if (autounblock.isToggled() && Utils.Player.isPlayerInGame() && Utils.Player.isPlayerHoldingWeapon() && !Mouse.isButtonDown(1) && mc.gameSettings.keyBindUseItem.isKeyDown()) {
+        if (autounblock.isToggled() && Utils.Player.isPlayerInGame() && Utils.Player.isPlayerHoldingWeapon() && !Mouse.isButtonDown(1) && mc.gameSettings.keyBindUseItem.isKeyDown() && mc.currentScreen == null) {
             long neow = System.currentTimeMillis();
             int ubdelay = Utils.Java.randomInt(850, 1050);
             if (neow >= ubdelay) {
