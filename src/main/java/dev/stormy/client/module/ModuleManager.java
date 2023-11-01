@@ -51,6 +51,8 @@ public class ModuleManager {
       addModule(new Sprint());
       addModule(new AutoDodge());
       addModule(new PingSpoof());
+      addModule(new Flight());
+      addModule(new AutoBlock());
 
       initialized = true;
    }

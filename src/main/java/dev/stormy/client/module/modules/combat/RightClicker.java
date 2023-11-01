@@ -7,6 +7,7 @@ import dev.stormy.client.module.setting.impl.TickSetting;
 import dev.stormy.client.utils.Utils;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemFood;
+import net.minecraft.item.ItemPotion;
 import net.weavemc.loader.api.event.RenderHandEvent;
 import net.weavemc.loader.api.event.SubscribeEvent;
 import org.lwjgl.input.Mouse;
@@ -14,7 +15,7 @@ import org.lwjgl.input.Mouse;
 @SuppressWarnings("unused")
 public class RightClicker extends Module {
    public static SliderSetting rCPS;
-   public static TickSetting eatFood, noSword;
+   public static TickSetting noConsumables, noSword;
    public boolean shouldClick = false;
    long lastClickTime = 0;
    long wow = 0;
@@ -26,13 +27,13 @@ public class RightClicker extends Module {
       super("RightClicker", ModuleCategory.Combat, 0);
       this.registerSetting(new DescriptionSetting("Click automatically"));
       this.registerSetting(rCPS = new SliderSetting("CPS", 10.0D, 1.0D, 20.0D, 1.0D));
-      this.registerSetting(eatFood = new TickSetting("Whitelist Food", false));
-      this.registerSetting(noSword = new TickSetting("Whitelist Weapons", false));
+      this.registerSetting(noConsumables = new TickSetting("Blacklist Consumables", false));
+      this.registerSetting(noSword = new TickSetting("Blacklist Weapons", false));
    }
 
-   public boolean isFood() {
+   public boolean isConsumable() {
       if (mc.thePlayer.getHeldItem() != null) {
-          return eatFood.isToggled() && mc.thePlayer.getHeldItem().getItem() instanceof ItemFood;
+         return noConsumables.isToggled() && (mc.thePlayer.getHeldItem().getItem() instanceof ItemFood || mc.thePlayer.getHeldItem().getItem() instanceof ItemPotion);
       } else return false;
    }
    @SubscribeEvent
@@ -40,7 +41,7 @@ public class RightClicker extends Module {
       randomizer();
 
       if (Utils.Player.isPlayerInGame() && Mouse.isButtonDown(1) && shouldClick && mc.currentScreen == null) {
-         if (isFood()) {
+         if (isConsumable()) {
             return;
          }
          if (Utils.Player.isPlayerInGame() && noSword.isToggled() && Utils.Player.isPlayerHoldingWeapon()) {
