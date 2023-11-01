@@ -21,10 +21,10 @@ public class Bhop extends Module {
         super("Bhop", ModuleCategory.Movement, 0);
         this.registerSetting(new DescriptionSetting("Bunny Hop"));
         this.registerSetting(Speed = new SliderSetting("Speed", 1.0D, 0.5D, 5.0D, 0.01D));
-        this.registerSetting(gs = new SliderSetting("Ground Speed (Dev+Broken)", 1.0D, 0.5D, 5.0D, 0.01D));
-        this.registerSetting(as = new SliderSetting("Air Speed (Dev)", 1.0D, 1.0D, 5.0D, 0.01D));
-        this.registerSetting(tm = new TickSetting("Timer (Dev)", false));
-        this.registerSetting(SpeedMode = new ComboSetting<>("Mode", mode.Regular));
+        this.registerSetting(gs = new SliderSetting("Ground Speed (New)", 1.0D, 1.D, 2.0D, 0.01D));
+        this.registerSetting(as = new SliderSetting("Air Speed (New)", 1.0D, 1.0D, 5.0D, 0.01D));
+        this.registerSetting(tm = new TickSetting("Timer (New)", false));
+        this.registerSetting(SpeedMode = new ComboSetting<>("Mode", mode.New));
     }
     public void onDisable() {
         mc.thePlayer.speedInAir = 0.02F;
@@ -36,7 +36,7 @@ public class Bhop extends Module {
     @SubscribeEvent
     public void Stupidity(TickEvent e) {
         switch (SpeedMode.getMode()) {
-            case Regular:
+            case Old:
                 if (Utils.Player.isPlayerInGame()) {
                     onDisable();
                     if (mc.thePlayer.onGround && !mc.thePlayer.isSneaking() && mc.gameSettings.keyBindForward.isKeyDown()) {
@@ -49,7 +49,7 @@ public class Bhop extends Module {
                     }
                     break;
                 }
-            case Dev:
+            case New:
                 boolean devZoomin = false;
                 devZoomin = mc.gameSettings.keyBindForward.isKeyDown() || mc.gameSettings.keyBindBack.isKeyDown() ||mc.gameSettings.keyBindLeft.isKeyDown() || mc.gameSettings.keyBindRight.isKeyDown();
                 if (Utils.Player.isPlayerInGame()) {
@@ -60,7 +60,8 @@ public class Bhop extends Module {
                             mc.thePlayer.motionZ *= (float) Speed.getInput() / 2;
                             mc.thePlayer.jumpTicks = 0;
                             mc.thePlayer.speedInAir = (float) as.getInput() * 2 / 100;
-                            mc.thePlayer.onGroundSpeedFactor = (float) gs.getInput();
+                            mc.thePlayer.movementInput.moveForward *= (float) gs.getInput();
+                            mc.thePlayer.movementInput.moveStrafe *= (float) gs.getInput();
                             if (tm.isToggled()) {
                                 mc.timer.timerSpeed = 1.05F;
                                 }
@@ -73,7 +74,7 @@ public class Bhop extends Module {
     }
 
     public enum mode {
-        Regular, Dev
+        Old, New
     }
 }
 

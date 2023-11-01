@@ -12,8 +12,6 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.weavemc.loader.api.event.MouseEvent;
-import net.weavemc.loader.api.event.RenderHandEvent;
-import net.weavemc.loader.api.event.TickEvent;
 import org.lwjgl.input.Mouse;
 import dev.stormy.client.module.Module;
 import dev.stormy.client.module.setting.impl.DescriptionSetting;

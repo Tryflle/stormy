@@ -53,6 +53,7 @@ public class ModuleManager {
       addModule(new PingSpoof());
       addModule(new Flight());
       addModule(new AutoBlock());
+      addModule(new Strafe());
 
       initialized = true;
    }

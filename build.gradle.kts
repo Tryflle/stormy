@@ -1,6 +1,7 @@
 plugins {
     java
     id("com.github.weave-mc.weave-gradle") version "fac948db7f"
+    id("org.openjfx.javafxplugin") version "0.0.8"
 }
 
 group = "me.zircta"
@@ -17,6 +18,7 @@ repositories {
 dependencies {
     compileOnly("com.github.weave-mc:weave-loader:v0.2.4")
     compileOnly("org.spongepowered:mixin:0.8.5")
+
 }
 
 tasks.compileJava {

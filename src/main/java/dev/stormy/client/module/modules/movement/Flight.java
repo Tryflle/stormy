@@ -13,14 +13,14 @@ import me.tryfle.stormy.events.LivingUpdateEvent;
 
 @SuppressWarnings("unused")
 public class Flight extends Module {
-    public ComboSetting<mode> flightMode;
+    public ComboSetting<modeee> flightMode;
     private int counter, ticks;
     private boolean started;
 
     public Flight() {
         super("Flight", ModuleCategory.Movement, 0);
         this.registerSetting(new DescriptionSetting("bmc mode incomplete"));
-        this.registerSetting(flightMode = new ComboSetting<>("Mode", mode.BlocksMC));
+        this.registerSetting(flightMode = new ComboSetting<>("Mode", modeee.BlocksMC));
     }
 
     public void onEnable() {
@@ -124,7 +124,7 @@ public class Flight extends Module {
         }
         // im sure this is put together in a terrible way lol
 
-    public enum mode {
+    public enum modeee {
         BlocksMC, AirWalk
     }
 }
