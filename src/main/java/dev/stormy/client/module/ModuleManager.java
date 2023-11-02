@@ -54,6 +54,7 @@ public class ModuleManager {
       addModule(new Flight());
       addModule(new AutoBlock());
       addModule(new Strafe());
+      addModule(new Criticals());
 
       initialized = true;
    }

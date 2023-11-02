@@ -5,9 +5,11 @@ import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
 import dev.stormy.client.utils.Utils;
 import net.minecraft.block.BlockLiquid;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
+import net.weavemc.loader.api.event.RenderHandEvent;
 import net.weavemc.loader.api.event.SubscribeEvent;
 import net.weavemc.loader.api.event.TickEvent;
 import org.lwjgl.input.Mouse;
@@ -57,7 +59,7 @@ public class AutoBlock extends Module {
 
 
     @SubscribeEvent
-    public void onAttack(TickEvent e) {
+    public void onAttack(RenderHandEvent e) {
         if (Utils.Player.isPlayerInGame() && check && Utils.Player.isPlayerHoldingWeapon() && Mouse.isButtonDown(0) && mc.currentScreen == null) {
             if (breakBlocks.isToggled() && breakBlock()) return;
             long neow = System.currentTimeMillis();
