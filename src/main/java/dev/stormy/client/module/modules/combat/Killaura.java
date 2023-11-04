@@ -47,7 +47,7 @@ public class Killaura extends Module {
 
     @SubscribeEvent
     public void someMethod(TickEvent.Post e) {
-        if (target.isPresent() && target.get().hurtTime <= delay.getInput()) {
+        if (Utils.Player.isPlayerInGame() && target.isPresent() && target.get().hurtTime <= delay.getInput()) {
             Minecraft.getMinecraft().thePlayer.swingItem();
             mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(target.get(), C02PacketUseEntity.Action.ATTACK));
             EventBus.callEvent(new MouseEvent());
