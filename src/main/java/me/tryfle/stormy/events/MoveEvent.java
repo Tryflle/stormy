@@ -2,6 +2,9 @@ package me.tryfle.stormy.events;
 
 import net.weavemc.loader.api.event.Event;
 public final class MoveEvent extends Event {
+    public MoveEvent(double x, double y, double z) {
+    }
+
     public void setX(double x) {
         this.x = x;
     }

@@ -190,5 +190,4 @@ public class MoveUtils {
 
         return new float[] {forward, strafe};
     }
-
 }
