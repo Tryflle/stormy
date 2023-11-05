@@ -4,7 +4,7 @@ plugins {
     id("org.openjfx.javafxplugin") version "0.0.8"
 }
 
-group = "me.zircta"
+group = "me.tryfle"
 version = "1.0"
 
 minecraft.version("1.8.9")
@@ -22,5 +22,5 @@ dependencies {
 }
 
 tasks.compileJava {
-    options.release.set(11)
+    options.release.set(17)
 }
