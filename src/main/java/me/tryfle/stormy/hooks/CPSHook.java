@@ -9,8 +9,8 @@ public class CPSHook extends Hook {
     public static int leftCps = 0;
     public static int rightCps = 0;
     public static String CPS_ClASS_NAME = "com/moonsworth/lunar/client/HCRICIICRCIHCHIRHIIICIHCR/OHCOOHIIHCCCCCORHIRIRCIOO/RCHRHRRRRRCROOHROOIRRCORH",
-            LEFT_CPS_METHOD_NAME = "OOOOIOHIHCHCHICICORHOIOCC",
-            RIGHT_CPS_METHOD_NAME = "OOOOIOHIHCHCHICICORHOIOCC", CURRENT_HOOK_CLASS_PATH = "me/tryfle/stormy/hooks/CPSHook";
+            LEFT_CPS_METHOD_NAME = "RHORCRICRIIRHOIHOCRRORHCC",
+            RIGHT_CPS_METHOD_NAME = "RHORCRICRIIRHOIHOCRRORHCC", CURRENT_HOOK_CLASS_PATH = "me/tryfle/stormy/hooks/CPSHook";
     public CPSHook() {
         super(CPS_ClASS_NAME);
     }
@@ -28,9 +28,9 @@ public class CPSHook extends Hook {
         while (currentInsn != null) {
             if (currentInsn.getOpcode() == Opcodes.IRETURN) {
                 InsnList newInstructions = new InsnList();
-
                 newInstructions.add(new FieldInsnNode(Opcodes.GETSTATIC, CURRENT_HOOK_CLASS_PATH, "leftCps", "I"));
                 newInstructions.add(new InsnNode(Opcodes.IADD));
+                newInstructions.add(new FieldInsnNode(Opcodes.PUTSTATIC, CURRENT_HOOK_CLASS_PATH, "leftCps", "I"));
 
                 instructions.insertBefore(currentInsn, newInstructions);
             }
@@ -49,17 +49,15 @@ public class CPSHook extends Hook {
         while (currentInsn != null) {
             if (currentInsn.getOpcode() == Opcodes.IRETURN) {
                 InsnList newInstructions = new InsnList();
-
                 newInstructions.add(new FieldInsnNode(Opcodes.GETSTATIC, CURRENT_HOOK_CLASS_PATH, "rightCps", "I"));
                 newInstructions.add(new InsnNode(Opcodes.IADD));
-
+                newInstructions.add(new FieldInsnNode(Opcodes.PUTSTATIC, CURRENT_HOOK_CLASS_PATH, "rightCps", "I"));
                 instructions.insertBefore(currentInsn, newInstructions);
             }
 
             currentInsn = currentInsn.getNext();
         }
     }
-
     /**
      * Adds a left click onto the CPS mod.
      */

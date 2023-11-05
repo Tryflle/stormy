@@ -61,8 +61,7 @@ public class AutoClicker extends Module {
         if (Utils.Player.isPlayerInGame() && Mouse.isButtonDown(0) && shouldClick && mc.currentScreen == null) {
             if (breakBlock()) return;
             long currentTime = System.currentTimeMillis();
-            int delay = 1000 / (int) leftCPS.getInput();
-
+            int delay = 1000 / (int) leftCPS.getInput() + Utils.Java.randomInt(-3, 3);
             if (currentTime - lastClickTime >= delay && !delaying) {
                 lastClickTime = currentTime;
                 KeyBinding.setKeyBindState(lmb, true);
