@@ -1,7 +1,7 @@
 # Stormy
 - Based on an early build of https://github.com/syz66/illusion (Which is based on raven). (Syz has quit developing and delisted his repository.)
 - ClickGUI key is ENTER.
-- Made for Weave mod loader
+- Made for [Weave](https://github.com/Weave-MC).
 ## Goal
 - My goal with this project is to make my own custom client using Raven as a base without worrying about skidding too much. 
 - I want this client to be a hybrid client, but mainly blatant.
