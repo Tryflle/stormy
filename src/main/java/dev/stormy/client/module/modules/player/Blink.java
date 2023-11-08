@@ -4,11 +4,14 @@ import dev.stormy.client.module.Module;
 import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.network.Packet;
 import net.weavemc.loader.api.event.*;
 import me.tryfle.stormy.events.EventDirection;
 import me.tryfle.stormy.events.PacketEvent;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class Blink extends Module {
@@ -61,10 +64,30 @@ public class Blink extends Module {
         }
 
         outboundPackets.clear();
-        inboundPackets.clear();
+        if (!inboundPackets.isEmpty()) {
+            for (Packet<?> packet : inboundPackets) {
+                handleInbound(packet);
+            }
+            inboundPackets.clear();
+        }
         if (fakePlayer != null) {
             mc.theWorld.removeEntityFromWorld(fakePlayer.getEntityId());
             fakePlayer = null;
+        }
+    }
+    public void handleInbound(Packet<?> packet) {
+        Class<?> packetClass = packet.getClass();
+        Method[] methods = NetHandlerPlayClient.class.getDeclaredMethods();
+        for (Method method : methods) {
+            if (method.getReturnType().equals(void.class) && method.getParameterCount() == 1) {
+                if (method.getParameterTypes()[0].equals(packetClass)) {
+                    try {
+                        method.invoke(mc.getNetHandler(), packet);
+                    } catch (InvocationTargetException | IllegalAccessException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            }
         }
     }
 
