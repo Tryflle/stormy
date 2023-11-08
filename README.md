@@ -1,5 +1,5 @@
 # Stormy
-- Based on an early build of https://github.com/syz66/illusion (Which is based on raven). (Syz has quit developing and delisted his repository.)
+- Based on an early build of https://github.com/syz66/illusion (Which is based on raven). (DELISTED)
 - ClickGUI key is ENTER.
 - Made for [Weave](https://github.com/Weave-MC).
 ## Goal
