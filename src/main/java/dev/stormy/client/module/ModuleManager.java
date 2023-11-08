@@ -29,6 +29,7 @@ public class ModuleManager {
       addModule(new Reach());
       addModule(new Velocity());
       addModule(new InvMove());
+      addModule(new NoHitDelay());
       addModule(new KeepSprint());
       addModule(new NoSlow());
       addModule(new Timer());

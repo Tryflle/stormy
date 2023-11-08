@@ -1,5 +1,7 @@
 package me.tryfle.stormy.mixins;
 
+import dev.stormy.client.main.Stormy;
+import dev.stormy.client.module.modules.combat.NoHitDelay;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -13,6 +15,8 @@ public class MinecraftMixin {
 
     @Inject(method = "clickMouse", at = @At("HEAD"))
     public void clickMouseAfter(final CallbackInfo ci) {
-        leftClickCounter = 0;
+        if (Stormy.moduleManager.getModuleByClazz(NoHitDelay.class).isEnabled()) {
+            leftClickCounter = 0;
+        }
     }
 }
