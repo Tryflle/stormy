@@ -1,6 +1,7 @@
 package dev.stormy.client.module.modules.combat;
 
 import dev.stormy.client.module.Module;
+import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.DoubleSliderSetting;
 
 public class Backtrack extends Module {
@@ -9,6 +10,7 @@ public class Backtrack extends Module {
 
     public Backtrack() {
         super("Backtrack", Module.ModuleCategory.Combat, 0);
+        this.registerSetting(new DescriptionSetting("No logic YET"));
         this.registerSetting(anvalue = new DoubleSliderSetting("value", 5, 10, 0, 20, 1));
     }
 }

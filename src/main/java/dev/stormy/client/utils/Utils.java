@@ -31,6 +31,7 @@ import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.*;
 
+@SuppressWarnings("unused")
 public class Utils {
    private static final Random rand = new Random();
    public static final Minecraft mc = Minecraft.getMinecraft();

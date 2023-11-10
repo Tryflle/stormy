@@ -2,6 +2,7 @@ package me.tryfle.stormy.mixins;
 
 import com.mojang.authlib.GameProfile;
 import me.tryfle.stormy.events.SlowdownEvent;
+import me.tryfle.stormy.events.UpdateEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -14,6 +15,10 @@ import net.weavemc.loader.api.event.EventBus;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EntityPlayerSP.class)
 public abstract class EntityPlayerSPMixin extends AbstractClientPlayer {
@@ -36,6 +41,14 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer {
     @Shadow public float horseJumpPower;
     @Shadow public abstract void sendHorseJump();
     @Shadow public abstract boolean isSneaking();
+    @Unique private double cachedX;
+    @Unique private double cachedY;
+    @Unique private double cachedZ;
+    @Unique
+    private boolean cachedOnGround;
+    @Unique private float cachedRotationPitch;
+    @Unique private float cachedRotationYaw;
+
 
     /**
      * @author mc author
@@ -192,5 +205,32 @@ public abstract class EntityPlayerSPMixin extends AbstractClientPlayer {
             this.capabilities.isFlying = false;
             this.sendPlayerAbilities();
         }
+    }
+    @Inject(method = "onUpdateWalkingPlayer", at = @At("HEAD"), cancellable = true)
+    private void onUpdateWalkingPlayerPre(CallbackInfo ci) {
+        cachedX = posX;
+        cachedY = posY;
+        cachedZ = posZ;
+
+        cachedOnGround = onGround;
+
+        cachedRotationYaw = rotationYaw;
+        cachedRotationPitch = rotationPitch;
+
+        UpdateEvent event = new UpdateEvent.Pre(posX, posY, posZ, rotationYaw, rotationPitch, onGround);
+        EventBus.callEvent(event);
+        if(event.isCancelled()) {
+            ci.cancel();
+            return;
+        }
+
+        posX = event.getX();
+        posY = event.getY();
+        posZ = event.getZ();
+
+        onGround = event.isOnGround();
+
+        rotationYaw = event.getYaw();
+        rotationPitch = event.getPitch();
     }
 }

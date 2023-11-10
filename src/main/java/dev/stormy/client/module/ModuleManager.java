@@ -30,6 +30,7 @@ public class ModuleManager {
       addModule(new Velocity());
       addModule(new InvMove());
       addModule(new NoHitDelay());
+      addModule(new Backtrack());
       addModule(new KeepSprint());
       addModule(new NoSlow());
       addModule(new Timer());
@@ -51,7 +52,7 @@ public class ModuleManager {
       addModule(new AntiVoid());
       addModule(new Sprint());
       addModule(new AutoDodge());
-      addModule(new PingSpoof());
+      addModule(new FakeLag());
       addModule(new Flight());
       addModule(new AutoBlock());
       addModule(new Strafe());

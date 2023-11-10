@@ -22,7 +22,8 @@ public class ClickAssist extends Module {
 
    public ClickAssist() {
       super("ClickAssist", ModuleCategory.Combat, 0);
-      this.registerSetting(new DescriptionSetting("don't use rn | Chance to double click."));
+      this.registerSetting(new DescriptionSetting("Chance to double click."));
+      this.registerSetting(new DescriptionSetting("locked at 100%, don't use."));
       this.registerSetting(chance = new SliderSetting("Chance", 50.0D, 0.0D, 100.0D, 1.0D));
       this.registerSetting(cpsCheck = new TickSetting("Only if above 5 CPS", true));
    }
