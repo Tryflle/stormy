@@ -39,6 +39,7 @@ public class AutoPlace extends Module {
 
    @SubscribeEvent
    public void onTick(TickEvent tickEvent) {
+      if (!Utils.Player.isPlayerInGame()) return;
       if (Mouse.isButtonDown(1) && !mc.thePlayer.capabilities.isFlying && !Stormy.moduleManager.getModuleByClazz(FastPlace.class).isEnabled()) {
          ItemStack i = mc.thePlayer.getHeldItem();
          if (i == null || !(i.getItem() instanceof ItemBlock)) {
