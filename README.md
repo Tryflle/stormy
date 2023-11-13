@@ -7,6 +7,6 @@
 - I want this client to be a hybrid client, but mainly blatant.
 ## Modules + CGUI
 Key:
-❌ = incomplete/unsatisfactory
-✅ = implemented and functional
+- ❌ = incomplete/unsatisfactory
+- ✅ = implemented and functional
 ![image](https://github.com/Tryflle/stormy/assets/111710533/13047953-d1aa-4e5d-b8c5-d75fd2f8839e)
