@@ -7,15 +7,20 @@ import dev.stormy.client.module.setting.impl.SliderSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
 import dev.stormy.client.utils.Utils;
 import me.tryfle.stormy.events.LivingUpdateEvent;
+import net.minecraft.block.BlockLiquid;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.BlockPos;
 import net.weavemc.loader.api.event.SubscribeEvent;
 import org.lwjgl.input.Mouse;
 
 @SuppressWarnings("unused")
 public class AimAssist extends Module {
    public static SliderSetting speed, fov, distance;
-   public static TickSetting clickAim, weaponOnly, aimInvis;
+   public static TickSetting clickAim, weaponOnly, aimInvis, breakBlocks;
+   public boolean breakHeld = false;
 
    public AimAssist() {
       super("AimAssist", ModuleCategory.Combat, 0);
@@ -26,12 +31,13 @@ public class AimAssist extends Module {
       this.registerSetting(clickAim = new TickSetting("Clicking only", true));
       this.registerSetting(weaponOnly = new TickSetting("Weapon only", false));
       this.registerSetting(aimInvis = new TickSetting("Aim at invis", false));
+      this.registerSetting(breakBlocks = new TickSetting("Break Blocks", true));
    }
 
 
    @SubscribeEvent
    public void onUpdateCenter(LivingUpdateEvent e) {
-      if (mc.thePlayer == null || mc.currentScreen != null || !mc.inGameHasFocus || (weaponOnly.isToggled() && Utils.Player.isPlayerHoldingWeapon())) return;
+      if (mc.thePlayer == null || mc.currentScreen != null || !mc.inGameHasFocus || (weaponOnly.isToggled() && Utils.Player.isPlayerHoldingWeapon()) || (breakBlocks.isToggled() && breakBlock())) return;
       if (!clickAim.isToggled() || (Stormy.moduleManager.getModuleByClazz(AutoClicker.class).isEnabled() && Mouse.isButtonDown(0))) {
          Entity en = this.getEnemy();
          if (en != null && en != mc.thePlayer) {
@@ -67,4 +73,26 @@ public class AimAssist extends Module {
       double yaw = Math.atan2(x, z) * 57.2957795D;
       return (float) (yaw * -1.0D);
    }
+
+   public boolean breakBlock() {
+      if (breakBlocks.isToggled() && mc.objectMouseOver != null) {
+         BlockPos p = mc.objectMouseOver.getBlockPos();
+         if (p != null && Mouse.isButtonDown(0)) {
+            if (mc.theWorld.getBlockState(p).getBlock() != Blocks.air && !(mc.theWorld.getBlockState(p).getBlock() instanceof BlockLiquid)) {
+               if (!breakHeld) {
+                  int e = mc.gameSettings.keyBindAttack.getKeyCode();
+                  KeyBinding.setKeyBindState(e, true);
+                  KeyBinding.onTick(e);
+                  breakHeld = true;
+               }
+               return true;
+            }
+            if(breakHeld) {
+               breakHeld = false;
+            }
+         }
+      }
+      return false;
+   }
+
 }

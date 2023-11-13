@@ -10,7 +10,7 @@ import net.weavemc.loader.api.event.SubscribeEvent;
 import me.tryfle.stormy.events.LivingUpdateEvent;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
 
-
+@SuppressWarnings("unused")
 public class Velocity extends Module {
    public static SliderSetting horizontal, vertical, chance, tickDelay;
    public static ComboSetting<velomode> velomodes;
@@ -23,31 +23,30 @@ public class Velocity extends Module {
       this.registerSetting(tickDelay = new SliderSetting("Tick Delay", 0.0D, 0.0D, 20.0D, 1.0D));
       this.registerSetting(velomodes = new ComboSetting<>("Mode", velomode.Normal));
    }
-      @SuppressWarnings("unused")
-      @SubscribeEvent
-      public void onTick (LivingUpdateEvent e){
-         if (Utils.Player.isPlayerInGame() && mc.thePlayer.maxHurtTime > 0 && mc.thePlayer.hurtTime == mc.thePlayer.maxHurtTime - tickDelay.getInput() && e.type == LivingUpdateEvent.Type.PRE && velomodes.getMode() == velomode.Normal) {
-            if (chance.getInput() != 100.0D) {
-               double ch = Math.random();
-               if (ch >= chance.getInput() / 100.0D) {
-                  return;
-               }
-            }
 
-            if (horizontal.getInput() != 100.0D) {
-               mc.thePlayer.motionX *= horizontal.getInput() / 100.0D;
-               mc.thePlayer.motionZ *= horizontal.getInput() / 100.0D;
-            }
-
-            if (vertical.getInput() != 100.0D) {
-               mc.thePlayer.motionY *= vertical.getInput() / 100.0D;
+   @SubscribeEvent
+   public void onTick (LivingUpdateEvent e){
+      if (Utils.Player.isPlayerInGame() && mc.thePlayer.maxHurtTime > 0 && mc.thePlayer.hurtTime == mc.thePlayer.maxHurtTime - tickDelay.getInput() && e.type == LivingUpdateEvent.Type.PRE && velomodes.getMode() == velomode.Normal) {
+         if (chance.getInput() != 100.0D) {
+            double ch = Math.random();
+            if (ch >= chance.getInput() / 100.0D) {
+               return;
             }
          }
+
+         if (horizontal.getInput() != 100.0D) {
+            mc.thePlayer.motionX *= horizontal.getInput() / 100.0D;
+            mc.thePlayer.motionZ *= horizontal.getInput() / 100.0D;
+         }
+
+         if (vertical.getInput() != 100.0D) {
+            mc.thePlayer.motionY *= vertical.getInput() / 100.0D;
+         }
       }
+   }
    @SubscribeEvent
    public void onPacketReceive(PacketEvent.Receive e) {
-      if (e.getPacket() instanceof S12PacketEntityVelocity && velomodes.getMode() == velomode.Cancel) {
-         S12PacketEntityVelocity s12 = (S12PacketEntityVelocity) e.getPacket();
+      if (e.getPacket() instanceof S12PacketEntityVelocity s12 && velomodes.getMode() == velomode.Cancel) {
          if (Minecraft.getMinecraft().thePlayer != null && s12.getEntityID() == Minecraft.getMinecraft().thePlayer.entityId) {
             e.setCancelled(true);
          }

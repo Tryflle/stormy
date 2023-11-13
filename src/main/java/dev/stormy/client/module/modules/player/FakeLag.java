@@ -5,10 +5,13 @@ import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.SliderSetting;
 import dev.stormy.client.utils.PacketUtils;
 import dev.stormy.client.utils.TimedPacket;
+import dev.stormy.client.utils.Utils;
 import net.minecraft.network.Packet;
 import net.weavemc.loader.api.event.PacketEvent;
 import net.weavemc.loader.api.event.SubscribeEvent;
+import net.weavemc.loader.api.event.TickEvent;
 
+import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 @SuppressWarnings("unused")
@@ -23,37 +26,48 @@ public class FakeLag extends Module {
         this.registerSetting(spoofms = new SliderSetting("Ping in ms", 80.0, 30.0, 1000.0, 5.0));
     }
 
+
+    @SubscribeEvent
+    public void onTickDisabler(TickEvent e) {
+        if (!Utils.Player.isPlayerInGame()) this.disable();
+    }
+
     @SubscribeEvent
     public void pingSpooferOutgoing(PacketEvent.Send e) {
-        final Packet<?> packet = e.getPacket();
+        if (!Utils.Player.isPlayerInGame()) return;
+        Packet<?> packet = e.getPacket();
         outgoingPackets.add(new TimedPacket(packet, System.currentTimeMillis()));
         e.setCancelled(true);
     }
 
     @SubscribeEvent
     public void pingSpooferIncoming(PacketEvent.Receive e) {
-        final Packet<?> packet = e.getPacket();
+        if (!Utils.Player.isPlayerInGame()) return;
+        Packet<?> packet = e.getPacket();
         incomingPackets.add(new TimedPacket(packet, System.currentTimeMillis()));
         e.setCancelled(true);
     }
 
-    public void packetHandler() {
+/*    @SubscribeEvent
+    public void packetHandler(TickEvent e) {
+        if (!Utils.Player.isPlayerInGame()) return;
         final long time = System.currentTimeMillis();
-        while (!outgoingPackets.isEmpty()) {
-            final TimedPacket timedPacket = outgoingPackets.peek();
-            if (time - timedPacket.time() < spoofms.getInput()) {
-                break;
+        Iterator<TimedPacket> outgoingIterator = outgoingPackets.iterator();
+        while (outgoingIterator.hasNext()) {
+            TimedPacket timedPacket = outgoingIterator.next();
+            if (time - timedPacket.time() >= spoofms.getInput()) {
+                PacketUtils.handle(timedPacket.packet(), false);
+                outgoingIterator.remove();
             }
-            PacketUtils.handle(timedPacket.packet(), false);
-            outgoingPackets.remove(timedPacket);
         }
-        while (!incomingPackets.isEmpty()) {
-            final TimedPacket timedPacket = incomingPackets.peek();
-            if (time - timedPacket.time() < spoofms.getInput()) {
-                break;
+        Iterator<TimedPacket> incomingIterator = incomingPackets.iterator();
+        while (incomingIterator.hasNext()) {
+            TimedPacket timedPacket = incomingIterator.next();
+            if (time - timedPacket.time() >= spoofms.getInput()) {
+                PacketUtils.handle(timedPacket.packet(), true);
+                incomingIterator.remove();
             }
-            PacketUtils.handle(timedPacket.packet(), true);
-            incomingPackets.remove(timedPacket);
         }
     }
+    */
 }
