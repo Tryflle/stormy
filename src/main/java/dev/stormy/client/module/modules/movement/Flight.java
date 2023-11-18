@@ -16,7 +16,7 @@ public class Flight extends Module {
     private int counter, ticks;
     private boolean started;
     public final SliderSetting airspeed;
-    public final TickSetting gs;
+    public final TickSetting gs, ascend, descend;
 
     public Flight() {
         super("Flight", ModuleCategory.Movement, 0);
@@ -24,6 +24,8 @@ public class Flight extends Module {
         this.registerSetting(airspeed = new SliderSetting("Airspeed", 1, 0, 10, 0.5));
         this.registerSetting(flightMode = new ComboSetting<>("Mode", modeee.AirWalk));
         this.registerSetting(gs = new TickSetting("GroundSpoof", false));
+        this.registerSetting(ascend = new TickSetting("Ascend", false));
+        this.registerSetting(descend = new TickSetting("Descend", false));
     }
 
     public void onDisable() {
@@ -41,9 +43,16 @@ public class Flight extends Module {
             case AirWalk: {
                 mc.thePlayer.motionY = 0.0F;
                 mc.thePlayer.speedInAir = (float) airspeed.getInput() * 2 / 100;
+                if (ascend.isToggled() && mc.gameSettings.keyBindJump.isKeyDown()) {
+                    mc.thePlayer.onGround = true;
+                    mc.thePlayer.jumpTicks = 0;
+                    }
+                if (descend.isToggled() && mc.gameSettings.keyBindSneak.isKeyDown()) {
+                    mc.thePlayer.motionY = -0.5F;
+                    }
+                }
             }
         }
-    }
     public enum modeee {
         AirWalk
     }
