@@ -9,6 +9,10 @@ public class Theme {
         String themeColor = ClickGuiModule.clientTheme.getMode().toString();
 
         switch (themeColor) {
+            case "PastelPink":
+                return new Color(237, 138, 209);
+            case "Pink":
+                return new Color(232, 100, 195);
             case "Tryfle":
                 return new Color(216, 65, 100);
             case "Sassan":

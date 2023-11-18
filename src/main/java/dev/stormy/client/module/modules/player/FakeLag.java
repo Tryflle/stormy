@@ -7,9 +7,7 @@ import dev.stormy.client.utils.PacketUtils;
 import dev.stormy.client.utils.TimedPacket;
 import dev.stormy.client.utils.Utils;
 import net.minecraft.network.Packet;
-import net.weavemc.loader.api.event.PacketEvent;
-import net.weavemc.loader.api.event.SubscribeEvent;
-import net.weavemc.loader.api.event.TickEvent;
+import net.weavemc.loader.api.event.*;
 
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -48,26 +46,34 @@ public class FakeLag extends Module {
         e.setCancelled(true);
     }
 
-/*    @SubscribeEvent
-    public void packetHandler(TickEvent e) {
+    @SubscribeEvent
+    public void packetHandler(RenderHandEvent e) {
         if (!Utils.Player.isPlayerInGame()) return;
         final long time = System.currentTimeMillis();
         Iterator<TimedPacket> outgoingIterator = outgoingPackets.iterator();
         while (outgoingIterator.hasNext()) {
-            TimedPacket timedPacket = outgoingIterator.next();
-            if (time - timedPacket.time() >= spoofms.getInput()) {
-                PacketUtils.handle(timedPacket.packet(), false);
-                outgoingIterator.remove();
+            try {
+                TimedPacket timedPacket = outgoingIterator.next();
+                if (time - timedPacket.time() >= spoofms.getInput()) {
+                    PacketUtils.handle(timedPacket.packet(), false);
+                    outgoingIterator.remove();
+                }
+            } catch (Exception exception) {
+                exception.printStackTrace();
             }
         }
         Iterator<TimedPacket> incomingIterator = incomingPackets.iterator();
-        while (incomingIterator.hasNext()) {
-            TimedPacket timedPacket = incomingIterator.next();
-            if (time - timedPacket.time() >= spoofms.getInput()) {
-                PacketUtils.handle(timedPacket.packet(), true);
-                incomingIterator.remove();
+        try {
+            while (incomingIterator.hasNext()) {
+                TimedPacket timedPacket = incomingIterator.next();
+                if (time - timedPacket.time() >= spoofms.getInput()) {
+                    PacketUtils.handle(timedPacket.packet(), true);
+                    incomingIterator.remove();
+                }
             }
+        } catch (Exception exception) {
+            exception.printStackTrace();
         }
     }
-    */
+
 }

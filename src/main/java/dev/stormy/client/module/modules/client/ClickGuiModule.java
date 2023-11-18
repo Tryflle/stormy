@@ -15,7 +15,7 @@ public class ClickGuiModule extends Module {
 
     public ClickGuiModule() {
         super("ClickGui", Module.ModuleCategory.Client, 28);
-        this.registerSetting(clientTheme = new ComboSetting<>("Theme", Colors.Amethyst));
+        this.registerSetting(clientTheme = new ComboSetting<>("Theme", Colors.Steel));
     }
 
     private final KeyBinding[] moveKeys = new KeyBinding[]{
@@ -44,6 +44,6 @@ public class ClickGuiModule extends Module {
     }
 
     public enum Colors {
-        Tryfle, Sassan, Gold, Steel, Emerald, Orange, Amethyst, Lily
+        Tryfle, Sassan, Gold, Steel, Emerald, Orange, Amethyst, Lily, PastelPink, Pink
     }
 }
