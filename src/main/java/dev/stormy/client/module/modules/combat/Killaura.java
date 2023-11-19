@@ -21,7 +21,7 @@ import java.util.Optional;
 public class Killaura extends Module {
     static Optional<EntityPlayer> target = Optional.empty();
     public static SliderSetting range, frequency, hurtTimeAmt, rotRand;
-    public static TickSetting shouldBlock, targetESP, testSetting, alwaysAB, rots;
+    public static TickSetting shouldBlock, targetESP, testSetting, alwaysAB, rots, whenLooking;
     public TimerUtils timer = new TimerUtils();
     public boolean delaying, isAttacking = false;
     long lastClickTime = 0;
@@ -35,6 +35,7 @@ public class Killaura extends Module {
         this.registerSetting(hurtTimeAmt = new SliderSetting("Ignore before hurt time", 0, 0, 20, 1));
         this.registerSetting(rotRand = new SliderSetting("Rotation Randomization", 2, 0, 3, .01));
         this.registerSetting(rots = new TickSetting("Rotations (for bypassing)", false));
+        this.registerSetting(whenLooking = new TickSetting("Only when looking at player", false));
         this.registerSetting(shouldBlock = new TickSetting("Autoblock (Hold RMB)", false));
         this.registerSetting(alwaysAB = new TickSetting("Autoblock", false));
         this.registerSetting(targetESP = new TickSetting("ESP", false));
@@ -51,12 +52,12 @@ public class Killaura extends Module {
         }
     }
     public boolean aBooleanCheck() {
-        if (!rots.isToggled()) return false;
+        if (!whenLooking.isToggled()) return false;
         MovingObjectPosition result = mc.objectMouseOver;
         if (result != null && result.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && result.entityHit instanceof EntityPlayer targetPlayer) {
-            return rots.isToggled() && Utils.Player.lookingAtPlayer(mc.thePlayer, targetPlayer, range.getInput());
+            return whenLooking.isToggled() && Utils.Player.lookingAtPlayer(mc.thePlayer, targetPlayer, range.getInput());
         }
-        return false;
+        else return false;
     }
     @SubscribeEvent
     public void experiMental(UpdateEvent.Pre e) {
@@ -67,7 +68,7 @@ public class Killaura extends Module {
         if (timer.hasReached(1000 / frequency.getInput() + Utils.Java.randomInt(-3, 3)) && mc.thePlayer.hurtTime < hurtTimeAmt.getInput() && mc.currentScreen == null) {
             if (target.isPresent()) {
                 if (mc.thePlayer.isBlocking() || mc.thePlayer.isEating()) return;
-                if (rots.isToggled() && !aBooleanCheck()) return;
+                if (whenLooking.isToggled() && !aBooleanCheck()) return;
                 mc.thePlayer.swingItem();
                 mc.playerController.attackEntity(mc.thePlayer, target.get());
                 timer.reset();
