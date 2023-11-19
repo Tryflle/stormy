@@ -7,6 +7,7 @@ import dev.stormy.client.module.setting.impl.TickSetting;
 import dev.stormy.client.utils.Utils;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
 import net.weavemc.loader.api.event.EventBus;
@@ -14,10 +15,12 @@ import net.weavemc.loader.api.event.MouseEvent;
 import net.weavemc.loader.api.event.RenderHandEvent;
 import net.weavemc.loader.api.event.SubscribeEvent;
 import org.lwjgl.input.Mouse;
+import net.minecraft.util.MovingObjectPosition;
+
 
 @SuppressWarnings("unused")
 public class AutoClicker extends Module {
-    public static TickSetting breakBlocks;
+    public static TickSetting breakBlocks, hitSelect;
     public static SliderSetting leftCPS;
     public boolean shouldClick, breakHeld = false;
     long lastClickTime = 0;
@@ -30,6 +33,7 @@ public class AutoClicker extends Module {
         this.registerSetting(new DescriptionSetting("Click automatically"));
         this.registerSetting(leftCPS = new SliderSetting("CPS", 10.0D, 1.0D, 20.0D, 1.0D));
         this.registerSetting(breakBlocks = new TickSetting("Break blocks", false));
+        this.registerSetting(hitSelect = new TickSetting("Hit Select", false));
     }
 
     public boolean breakBlock() {
@@ -46,7 +50,7 @@ public class AutoClicker extends Module {
                     }
                     return true;
                 }
-                if(breakHeld) {
+                if (breakHeld) {
                     breakHeld = false;
                 }
             }
@@ -54,11 +58,19 @@ public class AutoClicker extends Module {
         return false;
     }
 
+    public boolean hitSelectLogic() {
+        if (!hitSelect.isToggled()) return false;
+        MovingObjectPosition result = mc.objectMouseOver;
+        if (result != null && result.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && result.entityHit instanceof EntityPlayer targetPlayer) {
+            return hitSelect.isToggled() && Utils.Player.lookingAtPlayer(mc.thePlayer, targetPlayer, 3.5);
+        }
+        return false;
+    }
     @SubscribeEvent
     public void bop(RenderHandEvent e) {
         randomizer();
-
         if (Utils.Player.isPlayerInGame() && Mouse.isButtonDown(0) && shouldClick && mc.currentScreen == null) {
+            if (hitSelect.isToggled() && !hitSelectLogic()) return;
             if (breakBlock()) return;
             long currentTime = System.currentTimeMillis();
             int delay = 1000 / (int) leftCPS.getInput() + Utils.Java.randomInt(-3, 3);

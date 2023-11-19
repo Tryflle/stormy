@@ -48,6 +48,10 @@ public class Utils {
          return mc.thePlayer != null && mc.theWorld != null;
       }
 
+      public static boolean isPlayerMoving() {
+         return mc.thePlayer.moveForward != 0.0F || mc.thePlayer.moveStrafing != 0.0F;
+      }
+
       public static double fovFromEntity(Entity en) {
          return ((double) (mc.thePlayer.rotationYaw - fovToEntity(en)) % 360.0D + 540.0D) % 360.0D - 180.0D;
       }
@@ -59,6 +63,13 @@ public class Utils {
          return (float) (yaw * -1.0D);
       }
 
+      public static boolean lookingAtPlayer(EntityPlayer viewer, EntityPlayer targetPlayer, double maxDistance) {
+         double deltaX = targetPlayer.posX - viewer.posX;
+         double deltaY = targetPlayer.posY - viewer.posY + viewer.getEyeHeight();
+         double deltaZ = targetPlayer.posZ - viewer.posZ;
+         double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
+         return distance < maxDistance;
+      }
       public static boolean playerOverAir() {
          double x = mc.thePlayer.posX;
          double y = mc.thePlayer.posY - 1.0D;

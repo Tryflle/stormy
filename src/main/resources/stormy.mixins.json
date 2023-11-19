@@ -11,6 +11,7 @@
     "MixinEntityPlayerSP",
     "NetworkManagerMixin",
     "RendererLivingEntityMixin",
-    "RenderGlobalMixin"
+    "RenderGlobalMixin",
+    "IMixinMinecraft"
   ]
 }

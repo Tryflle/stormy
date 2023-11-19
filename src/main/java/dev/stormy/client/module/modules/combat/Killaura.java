@@ -1,38 +1,44 @@
 package dev.stormy.client.module.modules.combat;
 
+import dev.stormy.client.clickgui.Theme;
 import dev.stormy.client.module.Module;
 import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.SliderSetting;
+import dev.stormy.client.module.setting.impl.TickSetting;
+import dev.stormy.client.utils.TimerUtils;
 import dev.stormy.client.utils.Utils;
-import net.minecraft.client.Minecraft;
+import me.tryfle.stormy.events.UpdateEvent;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.play.client.C02PacketUseEntity;
-import net.minecraft.util.Vec3;
-import net.weavemc.loader.api.event.EventBus;
-import net.weavemc.loader.api.event.MouseEvent;
-import net.weavemc.loader.api.event.SubscribeEvent;
-import net.weavemc.loader.api.event.TickEvent;
-import java.util.Optional;
-import static java.lang.Math.PI;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.weavemc.loader.api.event.*;
+import org.lwjgl.input.Mouse;
 
+import java.util.Optional;
+
+@SuppressWarnings("unused")
 public class Killaura extends Module {
     static Optional<EntityPlayer> target = Optional.empty();
-    public static SliderSetting range, delay;
+    public static SliderSetting range, frequency, hurtTimeAmt, rotRand;
+    public static TickSetting shouldBlock, targetESP, testSetting, alwaysAB, rots;
+    public TimerUtils timer = new TimerUtils();
+    public boolean delaying, isAttacking = false;
+    long lastClickTime = 0;
+    int rmb = mc.gameSettings.keyBindUseItem.getKeyCode();
 
     public Killaura() {
         super("Killaura", ModuleCategory.Combat, 0);
-        this.registerSetting(new DescriptionSetting("NO ROTS. NO BYPASS."));
+        this.registerSetting(new DescriptionSetting("Probably doesn't bypass much."));
         this.registerSetting(range = new SliderSetting("Range", 3, 3, 6, 0.1));
-        this.registerSetting(delay = new SliderSetting("Frequency", 3, 1, 10, 0.5));
+        this.registerSetting(frequency = new SliderSetting("CPS", 10, 1, 20, 0.5));
+        this.registerSetting(hurtTimeAmt = new SliderSetting("Ignore before hurt time", 0, 0, 20, 1));
+        this.registerSetting(rotRand = new SliderSetting("Rotation Randomization", 2, 0, 3, .01));
+        this.registerSetting(rots = new TickSetting("Rotations (for bypassing)", false));
+        this.registerSetting(shouldBlock = new TickSetting("Autoblock (Hold RMB)", false));
+        this.registerSetting(alwaysAB = new TickSetting("Autoblock", false));
+        this.registerSetting(targetESP = new TickSetting("ESP", false));
     }
-
-    public float getRotationYawForTarget(Vec3 pos, Vec3 target) {
-        double deltaX = target.xCoord - pos.xCoord;
-        double deltaZ = target.zCoord - pos.zCoord;
-        double yaw = (Math.atan2(deltaZ, deltaX) * (180 / PI)) - 90;
-        return (float) yaw;
-    }
-
 
     @SubscribeEvent
     public void setTarget(TickEvent.Pre e) {
@@ -40,17 +46,93 @@ public class Killaura extends Module {
             target = mc.theWorld != null
                     ? mc.theWorld.playerEntities.stream()
                     .filter(player -> player.getEntityId() != mc.thePlayer.getEntityId() &&
-                            player.getDistanceToEntity(Minecraft.getMinecraft().thePlayer) <= range.getInput())
+                            player.getDistanceToEntity(mc.thePlayer) <= range.getInput())
                     .findFirst() : Optional.empty();
         }
     }
-
+    public boolean aBooleanCheck() {
+        if (!rots.isToggled()) return false;
+        MovingObjectPosition result = mc.objectMouseOver;
+        if (result != null && result.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && result.entityHit instanceof EntityPlayer targetPlayer) {
+            return rots.isToggled() && Utils.Player.lookingAtPlayer(mc.thePlayer, targetPlayer, range.getInput());
+        }
+        return false;
+    }
     @SubscribeEvent
-    public void someMethod(TickEvent.Post e) {
-        if (Utils.Player.isPlayerInGame() && target.isPresent() && target.get().hurtTime <= delay.getInput()) {
-            Minecraft.getMinecraft().thePlayer.swingItem();
-            mc.getNetHandler().addToSendQueue(new C02PacketUseEntity(target.get(), C02PacketUseEntity.Action.ATTACK));
-            EventBus.callEvent(new MouseEvent());
+    public void experiMental(UpdateEvent.Pre e) {
+        if (target.isEmpty() || !Utils.Player.isPlayerInGame()) {
+            isAttacking = false;
+            return;
+        }
+        if (timer.hasReached(1000 / frequency.getInput() + Utils.Java.randomInt(-3, 3)) && mc.thePlayer.hurtTime < hurtTimeAmt.getInput() && mc.currentScreen == null) {
+            if (target.isPresent()) {
+                if (mc.thePlayer.isBlocking() || mc.thePlayer.isEating()) return;
+                if (rots.isToggled() && !aBooleanCheck()) return;
+                mc.thePlayer.swingItem();
+                mc.playerController.attackEntity(mc.thePlayer, target.get());
+                timer.reset();
+                isAttacking = true;
+            }
+        }
+    }
+    public void finishDelay() {
+        long currentTime = System.currentTimeMillis();
+        int newdelay = Utils.Java.randomInt(20, 70);
+        if (currentTime - lastClickTime >= newdelay) {
+            lastClickTime = currentTime;
+            KeyBinding.setKeyBindState(rmb, false);
+            KeyBinding.onTick(rmb);
+            delaying = false;
+        }
+    }
+    @SubscribeEvent
+    public void onRender(RenderHandEvent e) {
+        if (((Mouse.isButtonDown(1) && shouldBlock.isToggled()) || alwaysAB.isToggled()) && Utils.Player.isPlayerHoldingWeapon() && isAttacking && mc.currentScreen == null) {
+            long currentTime = System.currentTimeMillis();
+            int delay = 1000 / (int) frequency.getInput() + Utils.Java.randomInt(-3, 3) - 4;
+            if (currentTime - lastClickTime >= delay && !delaying) {
+                lastClickTime = currentTime;
+                KeyBinding.setKeyBindState(rmb, true);
+                KeyBinding.onTick(rmb);
+                delaying = true;
+            }
+            if (delaying) {
+                finishDelay();
+            }
+        }
+    }
+    @SubscribeEvent
+    public void ESP(RenderWorldEvent e) {
+        if (targetESP.isToggled() && target.isPresent()) {
+            Utils.HUD.drawBoxAroundEntity(target.get(), 1, 0.0D, 0.0D, Theme.getMainColor().getRGB(), true);
+            Utils.HUD.drawBoxAroundEntity(target.get(), 2, 0.0D, 0.0D, Theme.getMainColor().getRGB(), true);
+        }
+    }
+    @SubscribeEvent
+    public void unblockthings(TickEvent e) {
+        if (!Utils.Player.isPlayerInGame()) return;
+        if (mc.thePlayer.isBlocking() && Utils.Player.isPlayerHoldingWeapon() && !Mouse.isButtonDown(1) && mc.currentScreen == null && !isAttacking) {
+            long neow = System.currentTimeMillis();
+            int ubdelay = Utils.Java.randomInt(850, 1050);
+            if (neow >= ubdelay) {
+                KeyBinding.setKeyBindState(rmb, false);
+                KeyBinding.onTick(rmb);
+            }
+        }
+    }
+    @SubscribeEvent
+    public void onClientTick(TickEvent.Post e) {
+        if (Utils.Player.isPlayerInGame() && target.isPresent() && mc.currentScreen == null && rots.isToggled() && !mc.thePlayer.isEating()) {
+            double deltaX = target.get().posX - mc.thePlayer.posX;
+            double deltaY = target.get().posY + target.get().getEyeHeight() - mc.thePlayer.posY - mc.thePlayer.getEyeHeight();
+            double deltaZ = target.get().posZ - mc.thePlayer.posZ;
+            double distance = MathHelper.sqrt_double(deltaX * deltaX + deltaZ * deltaZ);
+
+            float yaw = (float) (Math.atan2(deltaZ, deltaX) * (180 / Math.PI)) - 90.0F + (float) Utils.Java.randomInt(-rotRand.getInput(), rotRand.getInput());
+            float pitch = (float) (-(Math.atan2(deltaY, distance) * (180 / Math.PI))) + (float) Utils.Java.randomInt(-rotRand.getInput(), rotRand.getInput());
+
+            mc.thePlayer.rotationYaw = yaw;
+            mc.thePlayer.rotationPitch = pitch;
         }
     }
 }
