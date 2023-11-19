@@ -40,7 +40,7 @@ public class AimAssist extends Module {
       if (mc.thePlayer == null || mc.currentScreen != null || !mc.inGameHasFocus || (weaponOnly.isToggled() && Utils.Player.isPlayerHoldingWeapon()) || (breakBlocks.isToggled() && breakBlock())) return;
       if (!clickAim.isToggled() || (Stormy.moduleManager.getModuleByClazz(AutoClicker.class).isEnabled() && Mouse.isButtonDown(0))) {
          Entity en = this.getEnemy();
-         if (en != null && en != mc.thePlayer) {
+         if (en != null) {
             double n = n(en);
             if (n > 1.0D || n < -1.0D) {
                float val = (float) (-(n / (101.0D - speed.getInput())));
@@ -50,9 +50,13 @@ public class AimAssist extends Module {
    public Entity getEnemy() {
       int fov = (int) AimAssist.fov.getInput();
       for (EntityPlayer en : mc.theWorld.playerEntities) {
-         if (!aimInvis.isToggled() && en.isInvisible()) continue;
-         else if ((double) mc.thePlayer.getDistanceToEntity(en) > distance.getInput()) continue;
-         else if (!fov(en, (float) fov)) continue;
+         if (!isTarget(en)) {
+            continue;
+         } else if (!aimInvis.isToggled() && en.isInvisible()) {
+            continue;
+         } else if ((double) mc.thePlayer.getDistanceToEntity(en) > distance.getInput()) {
+            continue;
+         }
          return en;
       }
       return null;
@@ -94,5 +98,9 @@ public class AimAssist extends Module {
       }
       return false;
    }
-
+   public boolean isTarget (EntityPlayer en) {
+      if (en == mc.thePlayer) return false;
+      if (en.deathTime != 0) return false;
+      return true;
+   }
 }
