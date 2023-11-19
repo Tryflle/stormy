@@ -54,6 +54,9 @@ public class Velocity extends Module {
       accessorPacket.setMotionY((int) (packet.getMotionY() * vertical.getInput()/100));
       e.setPacket(accessorPacket);
    }
+
+
+   @SubscribeEvent
    public void onPacketReceive(PacketEvent.Receive e) {
       if (e.getPacket() instanceof S12PacketEntityVelocity s12 && velomodes.getMode() == velomode.Cancel) {
          if (Minecraft.getMinecraft().thePlayer != null && s12.getEntityID() == Minecraft.getMinecraft().thePlayer.entityId) {
