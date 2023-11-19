@@ -4,7 +4,9 @@ import dev.stormy.client.module.Module;
 import dev.stormy.client.module.setting.impl.SliderSetting;
 import dev.stormy.client.utils.Utils;
 import dev.stormy.client.module.setting.impl.ComboSetting;
+import me.tryfle.stormy.mixins.IS12PacketEntityVelocity;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.Entity;
 import net.weavemc.loader.api.event.PacketEvent;
 import net.weavemc.loader.api.event.SubscribeEvent;
 import me.tryfle.stormy.events.LivingUpdateEvent;
@@ -25,26 +27,34 @@ public class Velocity extends Module {
    }
 
    @SubscribeEvent
-   public void onTick (LivingUpdateEvent e){
-      if (Utils.Player.isPlayerInGame() && mc.thePlayer.maxHurtTime > 0 && mc.thePlayer.hurtTime == mc.thePlayer.maxHurtTime - tickDelay.getInput() && e.type == LivingUpdateEvent.Type.PRE && velomodes.getMode() == velomode.Normal) {
-         if (chance.getInput() != 100.0D) {
-            double ch = Math.random();
-            if (ch >= chance.getInput() / 100.0D) {
-               return;
+   public void onPacket(me.tryfle.stormy.events.PacketEvent e) {
+      if (velomodes.getMode() != velomode.Normal) return;
+      if (!e.isOutgoing()) {
+         if (e.getPacket() instanceof S12PacketEntityVelocity) {
+            if (chance.getInput() != 100.0D) {
+               double ch = Math.random() * 100;
+               if (ch >= chance.getInput()) {
+                  return;
+               }
             }
-         }
 
-         if (horizontal.getInput() != 100.0D) {
-            mc.thePlayer.motionX *= horizontal.getInput() / 100.0D;
-            mc.thePlayer.motionZ *= horizontal.getInput() / 100.0D;
-         }
-
-         if (vertical.getInput() != 100.0D) {
-            mc.thePlayer.motionY *= vertical.getInput() / 100.0D;
+            Entity entity = mc.theWorld.getEntityByID(((S12PacketEntityVelocity) e.getPacket()).getEntityID());
+            if (entity == mc.thePlayer) {
+               velo(e);
+            }
          }
       }
    }
-   @SubscribeEvent
+
+   public void velo(me.tryfle.stormy.events.PacketEvent e) {
+      if (velomodes.getMode() != velomode.Normal) return;
+      S12PacketEntityVelocity packet = (S12PacketEntityVelocity) e.getPacket();
+      IS12PacketEntityVelocity accessorPacket = (IS12PacketEntityVelocity) packet;
+      accessorPacket.setMotionX((int) (packet.getMotionX() * horizontal.getInput()/100));
+      accessorPacket.setMotionZ((int) (packet.getMotionZ() * horizontal.getInput()/100));
+      accessorPacket.setMotionY((int) (packet.getMotionY() * vertical.getInput()/100));
+      e.setPacket(accessorPacket);
+   }
    public void onPacketReceive(PacketEvent.Receive e) {
       if (e.getPacket() instanceof S12PacketEntityVelocity s12 && velomodes.getMode() == velomode.Cancel) {
          if (Minecraft.getMinecraft().thePlayer != null && s12.getEntityID() == Minecraft.getMinecraft().thePlayer.entityId) {

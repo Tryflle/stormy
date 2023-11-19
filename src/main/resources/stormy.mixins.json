@@ -6,10 +6,11 @@
     "EntityLivingBaseMixin",
     "EntityPlayerMixin",
     "EntityPlayerSPMixin",
+    "IS12PacketEntityVelocity",
     "MinecraftMixin",
+    "MixinEntityPlayerSP",
     "NetworkManagerMixin",
     "RendererLivingEntityMixin",
-    "RenderGlobalMixin",
-    "MixinEntityPlayerSP"
+    "RenderGlobalMixin"
   ]
-    }
+}
