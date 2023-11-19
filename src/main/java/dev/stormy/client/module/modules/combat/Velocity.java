@@ -14,7 +14,7 @@ import net.minecraft.network.play.server.S12PacketEntityVelocity;
 
 @SuppressWarnings("unused")
 public class Velocity extends Module {
-   public static SliderSetting horizontal, vertical, chance, tickDelay;
+   public static SliderSetting horizontal, vertical, chance;
    public static ComboSetting<velomode> velomodes;
 
    public Velocity() {
@@ -22,7 +22,6 @@ public class Velocity extends Module {
       this.registerSetting(horizontal = new SliderSetting("Horizontal", 90.0D, 0.0D, 200.0D, 1.0D));
       this.registerSetting(vertical = new SliderSetting("Vertical", 100.0D, 0.0D, 200.0D, 1.0D));
       this.registerSetting(chance = new SliderSetting("Chance", 100.0D, 0.0D, 100.0D, 1.0D));
-      this.registerSetting(tickDelay = new SliderSetting("Tick Delay", 0.0D, 0.0D, 20.0D, 1.0D));
       this.registerSetting(velomodes = new ComboSetting<>("Mode", velomode.Normal));
    }
 
