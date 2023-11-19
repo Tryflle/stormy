@@ -27,7 +27,8 @@ public class Velocity extends Module {
 
    @SubscribeEvent
    public void onPacket(me.tryfle.stormy.events.PacketEvent e) {
-      if (velomodes.getMode() != velomode.Normal) return;
+      if (velomodes.getMode() == velomode.Cancel || mc.thePlayer == null) return;
+      if (velomodes.getMode() == velomode.Minemen && mc.thePlayer.onGround) return;
       if (!e.isOutgoing()) {
          if (e.getPacket() instanceof S12PacketEntityVelocity) {
             if (chance.getInput() != 100.0D) {
@@ -46,7 +47,7 @@ public class Velocity extends Module {
    }
 
    public void velo(me.tryfle.stormy.events.PacketEvent e) {
-      if (velomodes.getMode() != velomode.Normal) return;
+      if (velomodes.getMode() == velomode.Cancel) return;
       S12PacketEntityVelocity packet = (S12PacketEntityVelocity) e.getPacket();
       IS12PacketEntityVelocity accessorPacket = (IS12PacketEntityVelocity) packet;
       accessorPacket.setMotionX((int) (packet.getMotionX() * horizontal.getInput()/100));
@@ -66,6 +67,6 @@ public class Velocity extends Module {
    }
 
    public enum velomode {
-      Normal, Cancel
+      Normal, Cancel, Minemen
    }
 }
