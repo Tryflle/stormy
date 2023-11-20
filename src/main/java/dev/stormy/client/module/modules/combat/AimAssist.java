@@ -38,7 +38,7 @@ public class AimAssist extends Module {
    @SubscribeEvent
    public void onUpdateCenter(LivingUpdateEvent e) {
       if (mc.thePlayer == null || mc.currentScreen != null || !mc.inGameHasFocus || (weaponOnly.isToggled() && Utils.Player.isPlayerHoldingWeapon()) || (breakBlocks.isToggled() && breakBlock())) return;
-      if (!clickAim.isToggled() || (Stormy.moduleManager.getModuleByClazz(AutoClicker.class).isEnabled() && Mouse.isButtonDown(0))) {
+      if (!clickAim.isToggled() || (Stormy.moduleManager.getModuleByClazz(AutoClicker.class).isEnabled() && Mouse.isButtonDown(0)) || Mouse.isButtonDown(0)) {
          Entity en = this.getEnemy();
          if (en != null) {
             double n = n(en);
