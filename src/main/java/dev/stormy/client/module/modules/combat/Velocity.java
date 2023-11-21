@@ -2,14 +2,11 @@ package dev.stormy.client.module.modules.combat;
 
 import dev.stormy.client.module.Module;
 import dev.stormy.client.module.setting.impl.SliderSetting;
-import dev.stormy.client.utils.Utils;
 import dev.stormy.client.module.setting.impl.ComboSetting;
 import me.tryfle.stormy.mixins.IS12PacketEntityVelocity;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.weavemc.loader.api.event.PacketEvent;
 import net.weavemc.loader.api.event.SubscribeEvent;
-import me.tryfle.stormy.events.LivingUpdateEvent;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
 
 @SuppressWarnings("unused")
@@ -60,7 +57,7 @@ public class Velocity extends Module {
    @SubscribeEvent
    public void onPacketReceive(PacketEvent.Receive e) {
       if (e.getPacket() instanceof S12PacketEntityVelocity s12 && velomodes.getMode() == velomode.Cancel) {
-         if (Minecraft.getMinecraft().thePlayer != null && s12.getEntityID() == Minecraft.getMinecraft().thePlayer.entityId) {
+         if (mc.thePlayer != null && s12.getEntityID() == mc.thePlayer.entityId) {
             e.setCancelled(true);
          }
       }

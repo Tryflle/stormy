@@ -7,32 +7,44 @@ import dev.stormy.client.module.setting.impl.SliderSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
 import dev.stormy.client.utils.Utils;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.network.play.server.S12PacketEntityVelocity;
+import net.weavemc.loader.api.event.PacketEvent;
 import net.weavemc.loader.api.event.TickEvent;
 import net.weavemc.loader.api.event.SubscribeEvent;
 
+@SuppressWarnings("unused")
 public class Bhop extends Module {
 
     private final SliderSetting Speed, gs, as;
-    private final TickSetting tm;
+    public final TickSetting hitRec;
     public ComboSetting<mode> SpeedMode;
+    public boolean incomingVelo = false;
 
 
     public Bhop() {
         super("Bhop", ModuleCategory.Movement, 0);
         this.registerSetting(new DescriptionSetting("Bunny Hop"));
-        this.registerSetting(Speed = new SliderSetting("Speed", 1.0D, 0.5D, 5.0D, 0.01D));
+        this.registerSetting(Speed = new SliderSetting("Speed", 1.0D, 0.5D, 4.0D, 0.01D));
         this.registerSetting(gs = new SliderSetting("Ground Speed (New)", 1.0D, 1.D, 2.0D, 0.01D));
         this.registerSetting(as = new SliderSetting("Air Speed (New)", 1.0D, 1.0D, 5.0D, 0.01D));
-        this.registerSetting(tm = new TickSetting("Timer (New)", false));
+        this.registerSetting(hitRec = new TickSetting("Slow on hit recieve (New)", true));
         this.registerSetting(SpeedMode = new ComboSetting<>("Mode", mode.New));
     }
     public void onDisable() {
         mc.thePlayer.speedInAir = 0.02F;
-        mc.thePlayer.speedOnGround = 1.0F;
-        mc.timer.timerSpeed = 1.0F;
     }
 
-    @SuppressWarnings("unused")
+    @SubscribeEvent
+    public void heck(PacketEvent.Receive e) {
+        if (Utils.Player.isPlayerInGame()) {
+            if (e.getPacket() instanceof S12PacketEntityVelocity) {
+                incomingVelo = true;
+            }
+        }
+        incomingVelo = false;
+    }
+
+
     @SubscribeEvent
     public void Stupidity(TickEvent e) {
         switch (SpeedMode.getMode()) {
@@ -56,16 +68,18 @@ public class Bhop extends Module {
                     if (mc.thePlayer.onGround && !mc.thePlayer.isSneaking() && devZoomin && !mc.thePlayer.inWater) {
                         if (mc.thePlayer.motionX != 0 || mc.thePlayer.motionZ != 0) {
                             KeyBinding.setKeyBindState(mc.gameSettings.keyBindJump.getKeyCode(), false);
-                            mc.thePlayer.motionX *= (float) Speed.getInput() / 2;
-                            mc.thePlayer.motionZ *= (float) Speed.getInput() / 2;
-                            mc.thePlayer.jumpTicks = 0;
-                            mc.thePlayer.speedInAir = (float) as.getInput() * 2 / 100;
-                            mc.thePlayer.movementInput.moveForward *= (float) gs.getInput();
-                            mc.thePlayer.movementInput.moveStrafe *= (float) gs.getInput();
-                            if (tm.isToggled()) {
-                                mc.timer.timerSpeed = 1.05F;
-                                }
-                            mc.thePlayer.jump();
+                            if (incomingVelo && hitRec.isToggled()) {
+                                mc.thePlayer.motionX *= .5;
+                                mc.thePlayer.motionZ *= .5;
+                            } else {
+                                mc.thePlayer.motionX *= (float) Speed.getInput() / 2;
+                                mc.thePlayer.motionZ *= (float) Speed.getInput() / 2;
+                                mc.thePlayer.movementInput.moveForward *= (float) gs.getInput();
+                                mc.thePlayer.movementInput.moveStrafe *= (float) gs.getInput();
+                                mc.thePlayer.jumpTicks = 0;
+                                mc.thePlayer.speedInAir = (float) as.getInput() * 2 / 100;
+                                mc.thePlayer.jump();
+                            }
                         }
                     }
                     break;

@@ -62,7 +62,7 @@ public class AutoClicker extends Module {
         if (!hitSelect.isToggled()) return false;
         MovingObjectPosition result = mc.objectMouseOver;
         if (result != null && result.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && result.entityHit instanceof EntityPlayer targetPlayer) {
-            return hitSelect.isToggled() && Utils.Player.lookingAtPlayer(mc.thePlayer, targetPlayer, 3.5);
+            return hitSelect.isToggled() && Utils.Player.lookingAtPlayer(mc.thePlayer, targetPlayer, 4);
         }
         return false;
     }

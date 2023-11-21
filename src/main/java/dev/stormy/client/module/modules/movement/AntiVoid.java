@@ -19,14 +19,14 @@ public class AntiVoid extends Module {
     public AntiVoid() {
         super("AntiVoid", ModuleCategory.Movement, 0);
         this.registerSetting(new DescriptionSetting("Prevents falling in the void."));
-        this.registerSetting(mode = new ComboSetting<>("Mode", modes.AutoFlag));
-        this.registerSetting(fallDist = new SliderSetting("AutoFlag Fall Distance", 5.0D, 1.0D, 50.0D, 1.0D));
+        this.registerSetting(mode = new ComboSetting<>("Mode", modes.NCP));
+        this.registerSetting(fallDist = new SliderSetting("Fall Distance", 5.0D, 1.0D, 40.0D, 1.0D));
         this.registerSetting(AutoDisable = new TickSetting("AutoDisable", true));
     }
     @SuppressWarnings("unused")
     @SubscribeEvent
-    public void imFlagging(TickEvent e) {
-        if (Utils.Player.isPlayerInGame() && mode.getMode() == modes.AutoFlag) {
+    public void antiVoid(TickEvent e) {
+        if (Utils.Player.isPlayerInGame() && mode.getMode() == modes.NCP) {
             if (mc.thePlayer.fallDistance >= fallDist.getInput()) {
                 mc.thePlayer.motionY = 0;
                 mc.thePlayer.fallDistance = 0;
@@ -35,8 +35,11 @@ public class AntiVoid extends Module {
                 }
             }
         }
-        if (Utils.Player.isPlayerInGame() && mode.getMode() == modes.ManualFlag) {
-            mc.thePlayer.motionY = 0;
+        if (Utils.Player.isPlayerInGame() && mode.getMode() == modes.Karhu) {
+            if (mc.thePlayer.fallDistance > fallDist.getInput()) {
+                mc.thePlayer.motionY = -0.09800000190735147;
+                mc.thePlayer.fallDistance = 0;
+            }
             if (AutoDisable.isToggled()) {
                 this.toggle();
             }
@@ -44,7 +47,7 @@ public class AntiVoid extends Module {
     }
 
     public enum modes {
-        ManualFlag, AutoFlag
+       NCP, Karhu
     }
 }
 

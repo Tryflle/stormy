@@ -122,7 +122,7 @@ public class Killaura extends Module {
         }
     }
     @SubscribeEvent
-    public void onClientTick(TickEvent.Post e) {
+    public void onClientTick(RenderWorldEvent e) {
         if (Utils.Player.isPlayerInGame() && target.isPresent() && mc.currentScreen == null && rots.isToggled() && !mc.thePlayer.isEating()) {
             double deltaX = target.get().posX - mc.thePlayer.posX;
             double deltaY = target.get().posY + target.get().getEyeHeight() - mc.thePlayer.posY - mc.thePlayer.getEyeHeight();

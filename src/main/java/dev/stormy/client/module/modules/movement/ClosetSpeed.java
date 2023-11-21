@@ -10,41 +10,13 @@ import dev.stormy.client.module.setting.impl.TickSetting;
 
 public class ClosetSpeed extends Module {
 
-    public static TickSetting speed, timer, njd, jump;
+    public static TickSetting speed, njd, jump;
 
     public ClosetSpeed() {
         super("ClosetSpeed", ModuleCategory.Movement, 0);
         this.registerSetting(new DescriptionSetting("For more minor speed cheats."));
-        this.registerSetting(speed = new TickSetting("Legit Speed", true));
-        this.registerSetting(timer = new TickSetting("Legit Timer", true));
         this.registerSetting(njd = new TickSetting("No Jump Delay", true));
         this.registerSetting(jump = new TickSetting("Hold Jump", true));
-    }
-
-    @Override
-    public void onDisable() {
-        mc.timer.timerSpeed = 1.0f;
-    }
-
-    @Override
-    public void guiUpdate() {
-        if (mc.thePlayer != null) {
-            if (timer.isToggled()) {
-                mc.timer.timerSpeed = 1.004f;
-            } else {
-                mc.timer.timerSpeed = 1.0f;
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void onUpdate(LivingUpdateEvent e) {
-        if (mc.thePlayer != null) {
-            if (speed.isToggled()) {
-                mc.thePlayer.movementInput.moveForward *= 1.02F;
-                mc.thePlayer.movementInput.moveStrafe *= 1.02F;
-            }
-        }
     }
 
     @SubscribeEvent
