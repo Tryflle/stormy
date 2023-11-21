@@ -38,7 +38,6 @@ public class AntiVoid extends Module {
         if (Utils.Player.isPlayerInGame() && mode.getMode() == modes.Karhu) {
             if (mc.thePlayer.fallDistance > fallDist.getInput()) {
                 mc.thePlayer.motionY = -0.09800000190735147;
-                mc.thePlayer.fallDistance = 0;
             }
             if (AutoDisable.isToggled()) {
                 this.toggle();
