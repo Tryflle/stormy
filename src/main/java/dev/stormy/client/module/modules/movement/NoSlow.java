@@ -3,8 +3,9 @@ package dev.stormy.client.module.modules.movement;
 import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.SliderSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
-import dev.stormy.client.utils.TimerUtils;
+import dev.stormy.client.utils.math.TimerUtils;
 import dev.stormy.client.utils.Utils;
+import dev.stormy.client.utils.player.PlayerUtils;
 import me.tryfle.stormy.events.SlowdownEvent;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemFood;
@@ -32,13 +33,13 @@ public class NoSlow extends Module {
 
    @SubscribeEvent
    public void onSlowdown(SlowdownEvent e) {
-      if (!Utils.Player.isPlayerInGame()) return;
-      if (noweapons.isToggled() && Utils.Player.isPlayerHoldingWeapon()) return;
+      if (!PlayerUtils.isPlayerInGame()) return;
+      if (noweapons.isToggled() && PlayerUtils.isPlayerHoldingWeapon()) return;
       if (noconsumables.isToggled() && consumableCheck()) return;
       e.setCancelled(true);
       mc.thePlayer.movementInput.moveForward *= (100.0F - (float) speed.getInput()) / 100.0F;
       mc.thePlayer.movementInput.moveStrafe *= (100.0F - (float) speed.getInput()) / 100.0F;
-      if (autosprint.isToggled() && mc.gameSettings.keyBindSprint.isKeyDown() && !mc.thePlayer.isSprinting() && Utils.Player.isPlayerMoving()) {
+      if (autosprint.isToggled() && mc.gameSettings.keyBindSprint.isKeyDown() && !mc.thePlayer.isSprinting() && PlayerUtils.isPlayerMoving()) {
          KeyBinding.setKeyBindState(rmb, false);
          KeyBinding.onTick(rmb);
          if (timer.hasReached(100 + Utils.Java.randomInt(-10, 10))) {

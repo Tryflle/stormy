@@ -3,9 +3,10 @@ package dev.stormy.client.module.modules.player;
 import dev.stormy.client.module.Module;
 import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.SliderSetting;
-import dev.stormy.client.utils.PacketUtils;
-import dev.stormy.client.utils.TimedPacket;
+import dev.stormy.client.utils.packet.PacketUtils;
+import dev.stormy.client.utils.packet.TimedPacket;
 import dev.stormy.client.utils.Utils;
+import dev.stormy.client.utils.player.PlayerUtils;
 import net.minecraft.network.Packet;
 import net.weavemc.loader.api.event.*;
 
@@ -27,12 +28,12 @@ public class FakeLag extends Module {
 
     @SubscribeEvent
     public void onTickDisabler(TickEvent e) {
-        if (!Utils.Player.isPlayerInGame()) this.disable();
+        if (!PlayerUtils.isPlayerInGame()) this.disable();
     }
 
     @SubscribeEvent
     public void pingSpooferOutgoing(PacketEvent.Send e) {
-        if (!Utils.Player.isPlayerInGame()) return;
+        if (!PlayerUtils.isPlayerInGame()) return;
         Packet<?> packet = e.getPacket();
         outgoingPackets.add(new TimedPacket(packet, System.currentTimeMillis()));
         e.setCancelled(true);
@@ -40,7 +41,7 @@ public class FakeLag extends Module {
 
     @SubscribeEvent
     public void pingSpooferIncoming(PacketEvent.Receive e) {
-        if (!Utils.Player.isPlayerInGame()) return;
+        if (!PlayerUtils.isPlayerInGame()) return;
         Packet<?> packet = e.getPacket();
         incomingPackets.add(new TimedPacket(packet, System.currentTimeMillis()));
         e.setCancelled(true);
@@ -48,7 +49,7 @@ public class FakeLag extends Module {
 
     @SubscribeEvent
     public void packetHandler(RenderHandEvent e) {
-        if (!Utils.Player.isPlayerInGame()) return;
+        if (!PlayerUtils.isPlayerInGame()) return;
         final long time = System.currentTimeMillis();
         Iterator<TimedPacket> outgoingIterator = outgoingPackets.iterator();
         while (outgoingIterator.hasNext()) {

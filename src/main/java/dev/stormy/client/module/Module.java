@@ -2,6 +2,8 @@ package dev.stormy.client.module;
 
 import com.google.gson.JsonObject;
 import dev.stormy.client.module.setting.impl.TickSetting;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.weavemc.loader.api.event.EventBus;
 import org.lwjgl.input.Keyboard;
@@ -16,19 +18,20 @@ public abstract class Module {
    protected boolean enabled = false;
    protected boolean defaultEnabled = false;
    protected int keycode;
-   protected int defualtKeyCode;
+   protected int defaultKeycode;
 
-   protected static Minecraft mc;
+   protected static Minecraft mc = Minecraft.getMinecraft();
    private boolean isToggled = false;
 
+   @Getter @Setter
+   private String suffix;
 
    public Module(String name, ModuleCategory category, int keybind) {
       this.moduleName = name;
       this.moduleCategory = category;
       this.settings = new ArrayList<>();
       this.keycode = keybind;
-      this.defualtKeyCode = keybind;
-      mc = Minecraft.getMinecraft();
+      this.defaultKeycode = keybind;
    }
 
    public JsonObject getConfigAsJson(){
@@ -63,7 +66,6 @@ public abstract class Module {
 
       }
    }
-
 
    public void keybind() {
       if (this.keycode != 0 && this.canBeEnabled()) {
@@ -150,7 +152,7 @@ public abstract class Module {
    }
 
    public void resetToDefaults() {
-      this.keycode = defualtKeyCode;
+      this.keycode = defaultKeycode;
       this.setToggled(defaultEnabled);
 
       for(Setting setting : this.settings){

@@ -5,6 +5,8 @@ import dev.stormy.client.module.Module;
 import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.SliderSetting;
 import dev.stormy.client.utils.Utils;
+import dev.stormy.client.utils.client.ClientUtils;
+import dev.stormy.client.utils.player.PlayerUtils;
 import me.tryfle.stormy.events.DrawBlockHighlightEvent;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockLiquid;
@@ -30,6 +32,8 @@ public class AutoPlace extends Module {
       super("AutoPlace", ModuleCategory.Player, 0);
       this.registerSetting(new DescriptionSetting("Automatically places blocks under you."));
       this.registerSetting(frameDelay = new SliderSetting("Frame delay (fps/80)", 8.0D, 0.0D, 30.0D, 1.0D));
+
+      this.setSuffix(String.valueOf(frameDelay.getInput()));
    }
 
    @Override
@@ -39,7 +43,7 @@ public class AutoPlace extends Module {
 
    @SubscribeEvent
    public void onTick(TickEvent tickEvent) {
-      if (!Utils.Player.isPlayerInGame()) return;
+      if (!PlayerUtils.isPlayerInGame()) return;
       if (Mouse.isButtonDown(1) && !mc.thePlayer.capabilities.isFlying && !Stormy.moduleManager.getModuleByClazz(FastPlace.class).isEnabled()) {
          ItemStack i = mc.thePlayer.getHeldItem();
          if (i == null || !(i.getItem() instanceof ItemBlock)) {
@@ -52,7 +56,7 @@ public class AutoPlace extends Module {
 
    @SubscribeEvent
    public void onHighlight(DrawBlockHighlightEvent e) {
-      if (Utils.Player.isPlayerInGame()) {
+      if (PlayerUtils.isPlayerInGame()) {
          if (mc.currentScreen == null && !mc.thePlayer.capabilities.isFlying) {
             ItemStack i = mc.thePlayer.getHeldItem();
             if (i != null && i.getItem() instanceof ItemBlock) {
@@ -71,10 +75,10 @@ public class AutoPlace extends Module {
                               if (n - this.l >= 25L) {
                                  this.l = n;
                                  if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, i, pos, movingObj.sideHit, movingObj.hitVec)) {
-                                    Utils.Client.setMouseButtonState(1, false);
+                                    ClientUtils.setMouseButtonState(1, false);
                                     mc.thePlayer.swingItem();
                                     mc.getItemRenderer().resetEquippedProgress();
-                                    Utils.Client.setMouseButtonState(1, false);
+                                    ClientUtils.setMouseButtonState(1, false);
                                     this.lastPos = pos;
                                     this.f = 0;
                                  }

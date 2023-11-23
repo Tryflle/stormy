@@ -6,6 +6,7 @@ import dev.stormy.client.module.modules.client.AntiBot;
 import dev.stormy.client.module.setting.impl.ComboSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
 import dev.stormy.client.utils.Utils;
+import dev.stormy.client.utils.player.PlayerUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.weavemc.loader.api.event.RenderWorldEvent;
@@ -30,9 +31,8 @@ public class PlayerESP extends Module {
 
    @SubscribeEvent
    public void onRender(RenderWorldEvent e) {
-      if (Utils.Player.isPlayerInGame()) {
-         Iterator var3;
-         var3 = mc.theWorld.playerEntities.iterator();
+      if (PlayerUtils.isPlayerInGame()) {
+         Iterator<EntityPlayer> var3 = mc.theWorld.playerEntities.iterator();
 
          while(true) {
             EntityPlayer en;
@@ -42,7 +42,7 @@ public class PlayerESP extends Module {
                      return;
                   }
 
-                  en = (EntityPlayer) var3.next();
+                  en = var3.next();
                } while (en == mc.thePlayer);
             } while (en.deathTime != 0);
 

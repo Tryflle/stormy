@@ -3,7 +3,7 @@ package dev.stormy.client.module.modules.client;
 import dev.stormy.client.main.Stormy;
 import dev.stormy.client.module.Module;
 import dev.stormy.client.module.setting.impl.TickSetting;
-import dev.stormy.client.utils.Utils;
+import dev.stormy.client.utils.player.PlayerUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.weavemc.loader.api.event.SubscribeEvent;
@@ -35,7 +35,7 @@ public class AntiBot extends Module {
    }
 
    public static boolean bot(Entity en) {
-      if(!Utils.Player.isPlayerInGame() || mc.currentScreen != null) return false;
+      if(!PlayerUtils.isPlayerInGame() || mc.currentScreen != null) return false;
       Module antiBot = Stormy.moduleManager.getModuleByClazz(AntiBot.class);
       if (antiBot != null && !antiBot.isEnabled()) {
          return false;

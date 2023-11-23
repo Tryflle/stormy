@@ -5,6 +5,7 @@ import dev.stormy.client.module.modules.client.AntiBot;
 import dev.stormy.client.module.setting.impl.SliderSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
 import dev.stormy.client.utils.Utils;
+import dev.stormy.client.utils.math.MathUtils;
 import me.tryfle.stormy.events.RenderLabelEvent;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -35,7 +36,7 @@ public class Nametags extends Module {
          String str = en.getDisplayName().getFormattedText();
          if (showHealth.isToggled()) {
             double r = en.getHealth() / en.getMaxHealth();
-            String h = (r < 0.3D ? "\u00A7c" : (r < 0.5D ? "\u00A76" : (r < 0.7D ? "\u00A7e" : "\u00A7a"))) + Utils.Java.round(en.getHealth(), 1);
+            String h = (r < 0.3D ? "\u00A7c" : (r < 0.5D ? "\u00A76" : (r < 0.7D ? "\u00A7e" : "\u00A7a"))) + MathUtils.round(en.getHealth(), 1);
             str = str + " " + h;
          }
 

@@ -3,8 +3,10 @@ package dev.stormy.client.module.modules.player;
 import dev.stormy.client.module.Module;
 import dev.stormy.client.module.setting.impl.DoubleSliderSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
-import dev.stormy.client.utils.CoolDown;
+import dev.stormy.client.utils.client.ClientUtils;
+import dev.stormy.client.utils.math.CoolDown;
 import dev.stormy.client.utils.Utils;
+import dev.stormy.client.utils.player.PlayerUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
 import net.minecraft.client.settings.KeyBinding;
@@ -43,9 +45,9 @@ public class SafeWalk extends Module {
 
    @SubscribeEvent
    public void onTick(TickEvent e) {
-      if(Utils.Client.currentScreenMinecraft()) return;
+      if(ClientUtils.currentScreenMinecraft()) return;
 
-      if (!Utils.Player.isPlayerInGame()) return;
+      if (!PlayerUtils.isPlayerInGame()) return;
 
       boolean shiftTimeSettingActive = shiftTime.getInputMax() > 0;
       if(lookDown.isToggled()) {
@@ -77,7 +79,7 @@ public class SafeWalk extends Module {
       }
 
       if (mc.thePlayer.onGround) {
-         if (Utils.Player.playerOverAir()) {
+         if (PlayerUtils.playerOverAir()) {
             if(shiftTimeSettingActive){
                shiftTimer.setCooldown(Utils.Java.randomInt(shiftTime.getInputMin(), shiftTime.getInputMax() + 0.1));
                shiftTimer.start();

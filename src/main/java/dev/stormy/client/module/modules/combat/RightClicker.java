@@ -5,6 +5,7 @@ import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.SliderSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
 import dev.stormy.client.utils.Utils;
+import dev.stormy.client.utils.player.PlayerUtils;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemFood;
 import net.minecraft.item.ItemPotion;
@@ -53,9 +54,9 @@ public class RightClicker extends Module {
    public void bop(RenderHandEvent e) {
       randomizer();
 
-      if (Utils.Player.isPlayerInGame() && Mouse.isButtonDown(1) && shouldClick && mc.currentScreen == null) {
+      if (PlayerUtils.isPlayerInGame() && Mouse.isButtonDown(1) && shouldClick && mc.currentScreen == null) {
          if (isConsumable() || isBow() || isRod()) return;
-         if (Utils.Player.isPlayerInGame() && noSword.isToggled() && Utils.Player.isPlayerHoldingWeapon()) return;
+         if (PlayerUtils.isPlayerInGame() && noSword.isToggled() && PlayerUtils.isPlayerHoldingWeapon()) return;
          long currentTime = System.currentTimeMillis();
          int delay = 1000 / (int) rCPS.getInput();
 
@@ -77,6 +78,7 @@ public class RightClicker extends Module {
       double random = Utils.Java.randomInt(0, 2);
       shouldClick = random >= 0.5;
    }
+
    public void finishDelay() {
       long currentTime = System.currentTimeMillis();
       int newdelay = Utils.Java.randomInt(20, 70);
@@ -87,7 +89,5 @@ public class RightClicker extends Module {
          KeyBinding.onTick(rmb);
          delaying = false;
       }
-
-
    }
 }

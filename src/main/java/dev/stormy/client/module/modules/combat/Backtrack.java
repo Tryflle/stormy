@@ -3,9 +3,10 @@ package dev.stormy.client.module.modules.combat;
 import dev.stormy.client.module.Module;
 import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.SliderSetting;
-import dev.stormy.client.utils.PacketUtils;
-import dev.stormy.client.utils.TimedPacket;
+import dev.stormy.client.utils.packet.PacketUtils;
+import dev.stormy.client.utils.packet.TimedPacket;
 import dev.stormy.client.utils.Utils;
+import dev.stormy.client.utils.player.PlayerUtils;
 import net.minecraft.network.Packet;
 import net.weavemc.loader.api.event.*;
 
@@ -26,12 +27,12 @@ public class Backtrack extends Module {
 
     @SubscribeEvent
     public void onTickDisabler(TickEvent e) {
-        if (!Utils.Player.isPlayerInGame()) this.disable();
+        if (!PlayerUtils.isPlayerInGame()) this.disable();
     }
 
     @SubscribeEvent
     public void pingSpooferIncoming(PacketEvent.Receive e) {
-        if (!Utils.Player.isPlayerInGame()) return;
+        if (!PlayerUtils.isPlayerInGame()) return;
         try {
             Packet<?> packet = e.getPacket();
             incomingPackets.add(new TimedPacket(packet, System.currentTimeMillis()));
@@ -43,7 +44,7 @@ public class Backtrack extends Module {
 
     @SubscribeEvent
     public void packetHandler(RenderHandEvent e) {
-        if (!Utils.Player.isPlayerInGame()) return;
+        if (!PlayerUtils.isPlayerInGame()) return;
         final long time = System.currentTimeMillis();
         Iterator<TimedPacket> incomingIterator = incomingPackets.iterator();
         try {

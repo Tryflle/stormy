@@ -1,8 +1,6 @@
 package dev.stormy.client.utils;
 
-import dev.stormy.client.main.Stormy;
-import dev.stormy.client.module.Module;
-import dev.stormy.client.module.setting.impl.DoubleSliderSetting;
+import dev.stormy.client.utils.render.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderGlobal;
@@ -12,22 +10,12 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemAxe;
-import net.minecraft.item.ItemSword;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.MathHelper;
-import net.weavemc.loader.api.event.EventBus;
-import net.weavemc.loader.api.event.MouseEvent;
-import org.lwjgl.input.Mouse;
-import me.tryfle.stormy.hooks.CPSHook;
 import org.lwjgl.opengl.GL11;
-import dev.stormy.client.module.modules.combat.AutoClicker;
 
 import java.awt.*;
-import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.*;
 
@@ -36,137 +24,7 @@ public class Utils {
    private static final Random rand = new Random();
    public static final Minecraft mc = Minecraft.getMinecraft();
 
-   public static class Player {
-      public static void sendMessageToSelf(String txt) {
-         if (isPlayerInGame()) {
-            String m = Client.reformat("&7[&dR&7]&r " + txt);
-            mc.thePlayer.addChatMessage(new ChatComponentText(m));
-         }
-      }
-
-      public static boolean isPlayerInGame() {
-         return mc.thePlayer != null && mc.theWorld != null;
-      }
-
-      public static boolean isPlayerMoving() {
-         return mc.thePlayer.moveForward != 0.0F || mc.thePlayer.moveStrafing != 0.0F;
-      }
-
-      public static double fovFromEntity(Entity en) {
-         return ((double) (mc.thePlayer.rotationYaw - fovToEntity(en)) % 360.0D + 540.0D) % 360.0D - 180.0D;
-      }
-
-      public static float fovToEntity(Entity ent) {
-         double x = ent.posX - mc.thePlayer.posX;
-         double z = ent.posZ - mc.thePlayer.posZ;
-         double yaw = Math.atan2(x, z) * 57.2957795D;
-         return (float) (yaw * -1.0D);
-      }
-
-      public static boolean lookingAtPlayer(EntityPlayer viewer, EntityPlayer targetPlayer, double maxDistance) {
-         double deltaX = targetPlayer.posX - viewer.posX;
-         double deltaY = targetPlayer.posY - viewer.posY + viewer.getEyeHeight();
-         double deltaZ = targetPlayer.posZ - viewer.posZ;
-         double distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY + deltaZ * deltaZ);
-         return distance < maxDistance;
-      }
-      public static boolean playerOverAir() {
-         double x = mc.thePlayer.posX;
-         double y = mc.thePlayer.posY - 1.0D;
-         double z = mc.thePlayer.posZ;
-         BlockPos p = new BlockPos(MathHelper.floor_double(x), MathHelper.floor_double(y), MathHelper.floor_double(z));
-         return mc.theWorld.isAirBlock(p);
-      }
-
-      public static boolean isPlayerHoldingWeapon() {
-         if (mc.thePlayer.getCurrentEquippedItem() == null) {
-            return false;
-         } else {
-            Item item = mc.thePlayer.getCurrentEquippedItem().getItem();
-            return item instanceof ItemSword || item instanceof ItemAxe;
-         }
-      }
-   }
-
-   public static class HookUtils {
-      public static void setMouseButtonState(int mouseButton, boolean held) {
-         MouseEvent m = new MouseEvent();
-         ReflectionUtils.setPrivateValue(MouseEvent.class, m, mouseButton, "button");
-         ReflectionUtils.setPrivateValue(MouseEvent.class, m, held, "buttonState");
-         EventBus.callEvent(m);
-
-         ByteBuffer buttons = (ByteBuffer) ReflectionUtils.getPrivateValue(Mouse.class, null, "buttons");
-         if (buttons == null) {
-            System.out.println("buttons is null, something is wrong");
-            return;
-         }
-         buttons.put(mouseButton, (byte) (held ? 1 : 0));
-         ReflectionUtils.setPrivateValue(Mouse.class, null, buttons, "buttons");
-         if (held) {
-            if (mouseButton == 0) {
-               CPSHook.leftClick();
-            } else {
-               CPSHook.rightClick();
-            }
-         }
-      }
-   }
-
-   public static class Client {
-      public static void setMouseButtonState(int mouseButton, boolean held) {
-         MouseEvent m = new MouseEvent();
-         ReflectionUtils.setPrivateValue(MouseEvent.class, m, mouseButton, "button");
-         ReflectionUtils.setPrivateValue(MouseEvent.class, m, held, "buttonState");
-         EventBus.callEvent(m);
-
-         ByteBuffer buttons = (ByteBuffer) ReflectionUtils.getPrivateValue(Mouse.class, null, "buttons");
-         if (buttons == null) {
-            System.out.println("buttons is null, something is wrong");
-            return;
-         }
-         buttons.put(mouseButton, (byte) (held ? 1 : 0));
-         ReflectionUtils.setPrivateValue(Mouse.class, null, buttons, "buttons");
-      }
-
-      public static double ranModuleVal(DoubleSliderSetting a, Random r) {
-         return a.getInputMin() == a.getInputMax() ? a.getInputMin() : a.getInputMin() + r.nextDouble() * (a.getInputMax() - a.getInputMin());
-      }
-
-      public static boolean autoClickerClicking() {
-         Module autoClicker = Stormy.moduleManager.getModuleByClazz(AutoClicker.class);
-         if (autoClicker != null && autoClicker.isEnabled()) {
-            return autoClicker.isEnabled() && Mouse.isButtonDown(0);
-         }
-         return false;
-      }
-
-      public static int rainbowDraw(long speed, long... delay) {
-         long time = System.currentTimeMillis() + (delay.length > 0 ? delay[0] : 0L);
-         return Color.getHSBColor((float) (time % (15000L / speed)) / (15000.0F / (float) speed), 1.0F, 1.0F).getRGB();
-      }
-
-      public static boolean currentScreenMinecraft() {
-         return mc.currentScreen != null;
-      }
-
-      public static String reformat(String txt) {
-         return txt.replace("&", "\u00A7");
-      }
-   }
-
    public static class Java {
-      public static Random rand() {
-         return rand;
-      }
-
-      public static double round(double n, int d) {
-         if (d == 0) {
-            return (double) Math.round(n);
-         } else {
-            double p = Math.pow(10.0D, d);
-            return (double) Math.round(n * p) / p;
-         }
-      }
 
       public static ArrayList<String> toArrayList(String[] fakeList) {
          return new ArrayList<>(Arrays.asList(fakeList));
@@ -491,7 +349,7 @@ public class Utils {
                   d += ed;
                }
 
-               int c = Client.rainbowDraw(2L, d);
+               int c = RenderUtils.rainbowDraw(2L, d);
                float r2 = (float) (c >> 16 & 255) / 255.0F;
                float g2 = (float) (c >> 8 & 255) / 255.0F;
                float b2 = (float) (c & 255) / 255.0F;
