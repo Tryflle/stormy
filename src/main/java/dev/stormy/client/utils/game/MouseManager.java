@@ -1,5 +1,6 @@
-package dev.stormy.client.utils;
+package dev.stormy.client.utils.game;
 
+import dev.stormy.client.utils.player.PlayerUtils;
 import net.weavemc.loader.api.event.MouseEvent;
 import net.weavemc.loader.api.event.SubscribeEvent;
 
@@ -34,7 +35,8 @@ public class MouseManager {
 
    //prev f
    public static int getLeftClickCounter() {
-      if(!Utils.Player.isPlayerInGame())return leftClicks.size();
+      if(!PlayerUtils.isPlayerInGame()) return leftClicks.size();
+
       for(Long lon : leftClicks) {
          if(lon < System.currentTimeMillis() - 1000L){
             leftClicks.remove(lon);
@@ -47,7 +49,7 @@ public class MouseManager {
 
    // prev i
    public static int getRightClickCounter() {
-      if(!Utils.Player.isPlayerInGame())return leftClicks.size();
+      if(!PlayerUtils.isPlayerInGame())return leftClicks.size();
       for(Long lon : rightClicks) {
          if(lon < System.currentTimeMillis() - 1000L){
             rightClicks.remove(lon);

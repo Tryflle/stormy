@@ -5,6 +5,7 @@ import dev.stormy.client.main.Stormy;
 import dev.stormy.client.module.Module;
 import dev.stormy.client.module.setting.impl.ComboSetting;
 import dev.stormy.client.utils.Utils;
+import dev.stormy.client.utils.player.PlayerUtils;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.weavemc.loader.api.event.SubscribeEvent;
@@ -24,7 +25,7 @@ public class ClickGuiModule extends Module {
 
     @Override
     public void onEnable() {
-        if (Utils.Player.isPlayerInGame() && mc.currentScreen != Stormy.clickGui) {
+        if (PlayerUtils.isPlayerInGame() && mc.currentScreen != Stormy.clickGui) {
             mc.displayGuiScreen(Stormy.clickGui);
         }
     }
@@ -38,7 +39,7 @@ public class ClickGuiModule extends Module {
 
     @Override
     public void onDisable() {
-        if (Utils.Player.isPlayerInGame() && mc.currentScreen instanceof ClickGui) {
+        if (PlayerUtils.isPlayerInGame() && mc.currentScreen instanceof ClickGui) {
             mc.displayGuiScreen(null);
         }
     }

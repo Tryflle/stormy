@@ -4,8 +4,9 @@ import dev.stormy.client.module.Module;
 import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.SliderSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
-import dev.stormy.client.utils.MouseManager;
+import dev.stormy.client.utils.game.MouseManager;
 import dev.stormy.client.utils.Utils;
+import dev.stormy.client.utils.player.PlayerUtils;
 import net.minecraft.util.ChatComponentText;
 import net.weavemc.loader.api.event.SubscribeEvent;
 import net.weavemc.loader.api.event.MouseEvent;
@@ -41,7 +42,7 @@ public class ClickAssist extends Module {
    @SuppressWarnings("unused")
    @SubscribeEvent
    public void whyClick(MouseEvent e) {
-      if (Utils.Player.isPlayerInGame()) {
+      if (PlayerUtils.isPlayerInGame()) {
          if (cpsCheck.isToggled()) {
             if (e.getButtonState() && e.getButton() == 0 && chance.getInput() == 100.0D && MouseManager.getLeftClickCounter() >= 5) {
                logic();

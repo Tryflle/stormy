@@ -1,4 +1,4 @@
-package dev.stormy.client.utils;
+package dev.stormy.client.utils.packet;
 
 import net.minecraft.network.Packet;
 

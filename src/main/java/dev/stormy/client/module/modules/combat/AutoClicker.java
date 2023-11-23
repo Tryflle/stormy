@@ -5,6 +5,8 @@ import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.SliderSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
 import dev.stormy.client.utils.Utils;
+import dev.stormy.client.utils.asm.HookUtils;
+import dev.stormy.client.utils.player.PlayerUtils;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
@@ -62,14 +64,14 @@ public class AutoClicker extends Module {
         if (!hitSelect.isToggled()) return false;
         MovingObjectPosition result = mc.objectMouseOver;
         if (result != null && result.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && result.entityHit instanceof EntityPlayer targetPlayer) {
-            return hitSelect.isToggled() && Utils.Player.lookingAtPlayer(mc.thePlayer, targetPlayer, 4);
+            return hitSelect.isToggled() && PlayerUtils.lookingAtPlayer(mc.thePlayer, targetPlayer, 4);
         }
         return false;
     }
     @SubscribeEvent
     public void bop(RenderHandEvent e) {
         randomizer();
-        if (Utils.Player.isPlayerInGame() && Mouse.isButtonDown(0) && shouldClick && mc.currentScreen == null) {
+        if (PlayerUtils.isPlayerInGame() && Mouse.isButtonDown(0) && shouldClick && mc.currentScreen == null) {
             if (hitSelect.isToggled() && !hitSelectLogic()) return;
             if (breakBlock()) return;
             long currentTime = System.currentTimeMillis();
@@ -78,7 +80,7 @@ public class AutoClicker extends Module {
                 lastClickTime = currentTime;
                 KeyBinding.setKeyBindState(lmb, true);
                 KeyBinding.onTick(lmb);
-                Utils.HookUtils.setMouseButtonState(0, true);
+                HookUtils.setMouseButtonState(0, true);
                 delaying = true;
             }
             if (delaying) {
@@ -102,7 +104,7 @@ public class AutoClicker extends Module {
             KeyBinding.setKeyBindState(lmb, false);
             KeyBinding.onTick(lmb);
             EventBus.callEvent(new MouseEvent());
-            Utils.HookUtils.setMouseButtonState(0, false);
+            HookUtils.setMouseButtonState(0, false);
             delaying = false;
             shouldClick = false;
         }

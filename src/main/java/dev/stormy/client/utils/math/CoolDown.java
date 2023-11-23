@@ -1,4 +1,4 @@
-package dev.stormy.client.utils;
+package dev.stormy.client.utils.math;
 
 public class CoolDown {
     private long start;

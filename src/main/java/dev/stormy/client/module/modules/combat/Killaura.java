@@ -5,8 +5,9 @@ import dev.stormy.client.module.Module;
 import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.SliderSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
-import dev.stormy.client.utils.TimerUtils;
+import dev.stormy.client.utils.math.TimerUtils;
 import dev.stormy.client.utils.Utils;
+import dev.stormy.client.utils.player.PlayerUtils;
 import me.tryfle.stormy.events.UpdateEvent;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
@@ -43,7 +44,7 @@ public class Killaura extends Module {
 
     @SubscribeEvent
     public void setTarget(TickEvent.Pre e) {
-        if (Utils.Player.isPlayerInGame()) {
+        if (PlayerUtils.isPlayerInGame()) {
             target = mc.theWorld != null
                     ? mc.theWorld.playerEntities.stream()
                     .filter(player -> player.getEntityId() != mc.thePlayer.getEntityId() &&
@@ -55,13 +56,13 @@ public class Killaura extends Module {
         if (!whenLooking.isToggled()) return false;
         MovingObjectPosition result = mc.objectMouseOver;
         if (result != null && result.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && result.entityHit instanceof EntityPlayer targetPlayer) {
-            return whenLooking.isToggled() && Utils.Player.lookingAtPlayer(mc.thePlayer, targetPlayer, range.getInput());
+            return whenLooking.isToggled() && PlayerUtils.lookingAtPlayer(mc.thePlayer, targetPlayer, range.getInput());
         }
         else return false;
     }
     @SubscribeEvent
     public void experiMental(UpdateEvent.Pre e) {
-        if (target.isEmpty() || !Utils.Player.isPlayerInGame()) {
+        if (target.isEmpty() || !PlayerUtils.isPlayerInGame()) {
             isAttacking = false;
             return;
         }
@@ -88,7 +89,7 @@ public class Killaura extends Module {
     }
     @SubscribeEvent
     public void onRender(RenderHandEvent e) {
-        if (((Mouse.isButtonDown(1) && shouldBlock.isToggled()) || alwaysAB.isToggled()) && Utils.Player.isPlayerHoldingWeapon() && isAttacking && mc.currentScreen == null) {
+        if (((Mouse.isButtonDown(1) && shouldBlock.isToggled()) || alwaysAB.isToggled()) && PlayerUtils.isPlayerHoldingWeapon() && isAttacking && mc.currentScreen == null) {
             long currentTime = System.currentTimeMillis();
             int delay = 1000 / (int) frequency.getInput() + Utils.Java.randomInt(-3, 3) - 4;
             if (currentTime - lastClickTime >= delay && !delaying) {
@@ -111,8 +112,8 @@ public class Killaura extends Module {
     }
     @SubscribeEvent
     public void unblockthings(TickEvent e) {
-        if (!Utils.Player.isPlayerInGame()) return;
-        if (mc.thePlayer.isBlocking() && Utils.Player.isPlayerHoldingWeapon() && !Mouse.isButtonDown(1) && mc.currentScreen == null && !isAttacking) {
+        if (!PlayerUtils.isPlayerInGame()) return;
+        if (mc.thePlayer.isBlocking() && PlayerUtils.isPlayerHoldingWeapon() && !Mouse.isButtonDown(1) && mc.currentScreen == null && !isAttacking) {
             long neow = System.currentTimeMillis();
             int ubdelay = Utils.Java.randomInt(850, 1050);
             if (neow >= ubdelay) {
@@ -123,7 +124,7 @@ public class Killaura extends Module {
     }
     @SubscribeEvent
     public void onClientTick(RenderWorldEvent e) {
-        if (Utils.Player.isPlayerInGame() && target.isPresent() && mc.currentScreen == null && rots.isToggled() && !mc.thePlayer.isEating()) {
+        if (PlayerUtils.isPlayerInGame() && target.isPresent() && mc.currentScreen == null && rots.isToggled() && !mc.thePlayer.isEating()) {
             double deltaX = target.get().posX - mc.thePlayer.posX;
             double deltaY = target.get().posY + target.get().getEyeHeight() - mc.thePlayer.posY - mc.thePlayer.getEyeHeight();
             double deltaZ = target.get().posZ - mc.thePlayer.posZ;

@@ -3,8 +3,9 @@ package dev.stormy.client.module.modules.movement;
 import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.Module;
 import dev.stormy.client.module.setting.impl.TickSetting;
-import dev.stormy.client.utils.MoveUtils;
+import dev.stormy.client.utils.player.MoveUtils;
 import dev.stormy.client.utils.Utils;
+import dev.stormy.client.utils.player.PlayerUtils;
 import me.tryfle.stormy.events.MoveEvent;
 import net.weavemc.loader.api.event.SubscribeEvent;
 
@@ -20,7 +21,7 @@ public class Strafe extends Module {
 
     @SubscribeEvent
     public void onStrafe(MoveEvent e) {
-        if (!Utils.Player.isPlayerInGame() || (!air.isToggled() && !mc.thePlayer.onGround) || (!og.isToggled() && mc.thePlayer.onGround)) return;
+        if (!PlayerUtils.isPlayerInGame() || (!air.isToggled() && !mc.thePlayer.onGround) || (!og.isToggled() && mc.thePlayer.onGround)) return;
         MoveUtils.strafe();
     }
 }

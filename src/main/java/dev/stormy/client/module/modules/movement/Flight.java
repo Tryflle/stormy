@@ -1,10 +1,10 @@
 package dev.stormy.client.module.modules.movement;
 
-import dev.stormy.client.main.Stormy;
 import dev.stormy.client.module.setting.impl.ComboSetting;
 import dev.stormy.client.module.setting.impl.SliderSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
 import dev.stormy.client.utils.Utils;
+import dev.stormy.client.utils.player.PlayerUtils;
 import net.weavemc.loader.api.event.SubscribeEvent;
 import net.weavemc.loader.api.event.TickEvent;
 import dev.stormy.client.module.Module;
@@ -26,10 +26,12 @@ public class Flight extends Module {
         this.registerSetting(gs = new TickSetting("GroundSpoof", false));
         this.registerSetting(ascend = new TickSetting("Ascend", false));
         this.registerSetting(descend = new TickSetting("Descend", false));
+
+        this.setSuffix(flightMode.getMode().name());
     }
 
     public void onDisable() {
-        if (!Stormy.moduleManager.getModuleByClazz(Bhop.class).isEnabled()) {
+        if (mc.thePlayer != null) {
             mc.thePlayer.speedInAir = 0.02F;
         }
     }
@@ -37,7 +39,7 @@ public class Flight extends Module {
 
     @SubscribeEvent
     public void airTrafficControl(TickEvent e) {
-        if (!Utils.Player.isPlayerInGame()) return;
+        if (!PlayerUtils.isPlayerInGame()) return;
         if (gs.isToggled()) mc.thePlayer.onGround = true;
         switch (flightMode.getMode()) {
             case AirWalk: {

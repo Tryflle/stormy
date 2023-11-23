@@ -2,6 +2,7 @@ package dev.stormy.client.clickgui.components;
 
 import dev.stormy.client.module.setting.impl.DoubleSliderSetting;
 import dev.stormy.client.utils.Utils;
+import dev.stormy.client.utils.math.MathUtils;
 import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 import dev.stormy.client.clickgui.Component;
@@ -37,7 +38,7 @@ public class RangeSliderComponent implements Component {
         net.minecraft.client.gui.Gui.drawRect(this.module.category.getX() + boxMargin, this.module.category.getY() + this.moduleStartY + textSize, this.module.category.getX() - boxMargin + this.module.category.getWidth(), this.module.category.getY() + this.moduleStartY + textSize + boxHeight, -12302777);
         int startToDrawFrom = this.module.category.getX() + boxMargin + (int) this.blankWidth;
         int finishDrawingAt = startToDrawFrom + (int)this.barWidth;
-        int middleThing = (int) Utils.Java.round(this.barWidth/2, 0) + this.module.category.getX() + (int) this.blankWidth + boxMargin - 1;
+        int middleThing = (int) MathUtils.round(this.barWidth/2, 0) + this.module.category.getX() + (int) this.blankWidth + boxMargin - 1;
 
         net.minecraft.client.gui.Gui.drawRect(startToDrawFrom, this.module.category.getY() + this.moduleStartY + textSize, finishDrawingAt, this.module.category.getY() + this.moduleStartY + textSize + boxHeight, Color.white.getRGB());
         net.minecraft.client.gui.Gui.drawRect(middleThing, this.module.category.getY() + this.moduleStartY + textSize - 1, middleThing+(middleThing%2==0? 2:1), this.module.category.getY() + this.moduleStartY + textSize + boxHeight + 1, 0xff1D1D1F);

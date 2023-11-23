@@ -1,4 +1,4 @@
-package dev.stormy.client.utils;
+package dev.stormy.client.utils.asm;
 
 import java.lang.reflect.Field;
 

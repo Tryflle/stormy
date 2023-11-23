@@ -1,7 +1,9 @@
-package dev.stormy.client.utils;
+package dev.stormy.client.utils.render;
 
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.GL11;
+
+import java.awt.*;
 
 public class RenderUtils {
     public static void setColor(final int color) {
@@ -103,5 +105,10 @@ public class RenderUtils {
     public static void drawBorderedRoundedRect1(float x, float y, float x1, float y1, float radius, float borderSize, int borderC, int insideC) {
         drawRoundedRect(x, y, x1, y1, radius, insideC);
         drawRoundedOutline(x, y, x1, y1, radius, borderSize, borderC);
+    }
+
+    public static int rainbowDraw(long speed, long... delay) {
+        long time = System.currentTimeMillis() + (delay.length > 0 ? delay[0] : 0L);
+        return Color.getHSBColor((float) (time % (15000L / speed)) / (15000.0F / (float) speed), 1.0F, 1.0F).getRGB();
     }
 }

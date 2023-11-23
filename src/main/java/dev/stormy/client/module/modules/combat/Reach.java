@@ -3,6 +3,8 @@ package dev.stormy.client.module.modules.combat;
 
 import dev.stormy.client.main.Stormy;
 import dev.stormy.client.module.setting.impl.DoubleSliderSetting;
+import dev.stormy.client.utils.math.MathUtils;
+import dev.stormy.client.utils.player.PlayerUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItemFrame;
@@ -38,8 +40,9 @@ public class Reach extends Module {
    public static double mmVal(DoubleSliderSetting a, Random r) {
       return a.getInputMin() == a.getInputMax() ? a.getInputMin() : a.getInputMin() + r.nextDouble() * (a.getInputMax() - a.getInputMin());
    }
+
    public static boolean callReach() {
-      if (!Utils.Player.isPlayerInGame()) {
+      if (!PlayerUtils.isPlayerInGame()) {
          return false;
       } else if (movingOnly.isToggled() && (double) mc.thePlayer.moveForward == 0.0D && (double) mc.thePlayer.moveStrafing == 0.0D) {
          return false;
@@ -53,7 +56,7 @@ public class Reach extends Module {
             }
          }
 
-         double reach = mmVal(reachDist, Utils.Java.rand());
+         double reach = mmVal(reachDist, MathUtils.rand());
          Object[] object = findEntitiesWithinReach(reach);
          if (object == null) {
             return false;
@@ -133,7 +136,7 @@ public class Reach extends Module {
    @SuppressWarnings("unused")
    @SubscribeEvent
    public void longArmHaving(MouseEvent e) {
-      if (Utils.Player.isPlayerInGame() && Mouse.isButtonDown(0)) {
+      if (PlayerUtils.isPlayerInGame() && Mouse.isButtonDown(0)) {
          callReach();
       }
    }

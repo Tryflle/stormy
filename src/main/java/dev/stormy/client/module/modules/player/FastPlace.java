@@ -4,6 +4,7 @@ import dev.stormy.client.module.Module;
 import dev.stormy.client.module.setting.impl.SliderSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
 import dev.stormy.client.utils.Utils;
+import dev.stormy.client.utils.player.PlayerUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -22,7 +23,7 @@ public class FastPlace extends Module {
 
    @SubscribeEvent
    public void onPlayerTick(TickEvent.Post event) {
-      if (Utils.Player.isPlayerInGame() && mc.inGameHasFocus) {
+      if (PlayerUtils.isPlayerInGame() && mc.inGameHasFocus) {
          if (blockOnly.isToggled()) {
             ItemStack item = mc.thePlayer.getHeldItem();
             if (item == null || !(item.getItem() instanceof ItemBlock)) {

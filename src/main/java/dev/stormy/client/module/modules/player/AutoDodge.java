@@ -4,6 +4,7 @@ import dev.stormy.client.module.Module;
 import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
 import dev.stormy.client.utils.Utils;
+import dev.stormy.client.utils.player.PlayerUtils;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.util.ChatComponentText;
@@ -25,7 +26,7 @@ public class AutoDodge extends Module {
 
     @SubscribeEvent
     public void checkTeamsExist(TickEvent e) {
-        if (shouldNotify && Utils.Player.isPlayerInGame()) {
+        if (shouldNotify && PlayerUtils.isPlayerInGame()) {
             for (ScorePlayerTeam team : mc.theWorld.getScoreboard().getTeams()) {
                 String teamName = team.getRegisteredName();
                 mc.thePlayer.addChatMessage(new ChatComponentText(EnumChatFormatting.DARK_PURPLE + "Raven: " + EnumChatFormatting.AQUA + "Team: " + teamName));

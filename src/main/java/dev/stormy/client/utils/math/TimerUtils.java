@@ -1,4 +1,4 @@
-package dev.stormy.client.utils;
+package dev.stormy.client.utils.math;
 
 public class TimerUtils {
     private long lastMS;

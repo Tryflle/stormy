@@ -2,7 +2,7 @@ package dev.stormy.client.clickgui.components;
 
 import dev.stormy.client.main.Stormy;
 import dev.stormy.client.module.Module;
-import dev.stormy.client.utils.RenderUtils;
+import dev.stormy.client.utils.render.RenderUtils;
 import net.minecraft.client.gui.FontRenderer;
 import org.lwjgl.opengl.GL11;
 import dev.stormy.client.clickgui.Component;

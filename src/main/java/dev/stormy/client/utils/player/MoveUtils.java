@@ -1,4 +1,4 @@
-package dev.stormy.client.utils;
+package dev.stormy.client.utils.player;
 
 import net.minecraft.client.Minecraft;
 import net.weavemc.loader.api.event.SubscribeEvent;
