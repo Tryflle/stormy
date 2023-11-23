@@ -29,7 +29,7 @@ public class Flight extends Module {
     }
 
     public void onDisable() {
-        if (!Stormy.moduleManager.getModuleByClazz(Bhop.class).isEnabled()) {
+        if (!Stormy.moduleManager.getModuleByClazz(Bhop.class).isEnabled() && mc.thePlayer != null) {
             mc.thePlayer.speedInAir = 0.02F;
         }
     }
