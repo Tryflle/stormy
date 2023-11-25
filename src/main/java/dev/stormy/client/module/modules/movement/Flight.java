@@ -3,12 +3,12 @@ package dev.stormy.client.module.modules.movement;
 import dev.stormy.client.module.setting.impl.ComboSetting;
 import dev.stormy.client.module.setting.impl.SliderSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
-import dev.stormy.client.utils.Utils;
 import dev.stormy.client.utils.player.PlayerUtils;
 import net.weavemc.loader.api.event.SubscribeEvent;
 import net.weavemc.loader.api.event.TickEvent;
 import dev.stormy.client.module.Module;
 import dev.stormy.client.module.setting.impl.DescriptionSetting;
+
 
 @SuppressWarnings("unused")
 public class Flight extends Module {
@@ -26,8 +26,6 @@ public class Flight extends Module {
         this.registerSetting(gs = new TickSetting("GroundSpoof", false));
         this.registerSetting(ascend = new TickSetting("Ascend", false));
         this.registerSetting(descend = new TickSetting("Descend", false));
-
-        this.setSuffix(flightMode.getMode().name());
     }
 
     public void onDisable() {

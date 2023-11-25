@@ -1,6 +1,5 @@
 package dev.stormy.client.module.modules.movement;
 
-import me.tryfle.stormy.events.LivingUpdateEvent;
 import net.minecraft.client.settings.KeyBinding;
 import net.weavemc.loader.api.event.SubscribeEvent;
 import net.weavemc.loader.api.event.TickEvent;
@@ -10,7 +9,7 @@ import dev.stormy.client.module.setting.impl.TickSetting;
 
 public class ClosetSpeed extends Module {
 
-    public static TickSetting speed, njd, jump;
+    public static TickSetting njd, jump;
 
     public ClosetSpeed() {
         super("ClosetSpeed", ModuleCategory.Movement, 0);

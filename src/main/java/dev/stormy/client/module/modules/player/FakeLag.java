@@ -5,7 +5,6 @@ import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.SliderSetting;
 import dev.stormy.client.utils.packet.PacketUtils;
 import dev.stormy.client.utils.packet.TimedPacket;
-import dev.stormy.client.utils.Utils;
 import dev.stormy.client.utils.player.PlayerUtils;
 import net.minecraft.network.Packet;
 import net.weavemc.loader.api.event.*;

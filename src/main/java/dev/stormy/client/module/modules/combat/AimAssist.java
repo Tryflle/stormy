@@ -5,7 +5,6 @@ import dev.stormy.client.module.Module;
 import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.SliderSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
-import dev.stormy.client.utils.Utils;
 import dev.stormy.client.utils.player.PlayerUtils;
 import me.tryfle.stormy.events.LivingUpdateEvent;
 import net.minecraft.block.BlockLiquid;

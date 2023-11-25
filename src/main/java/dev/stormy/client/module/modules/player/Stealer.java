@@ -1,6 +1,7 @@
 package dev.stormy.client.module.modules.player;
 
 import dev.stormy.client.module.Module;
+import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.DoubleSliderSetting;
 import dev.stormy.client.utils.client.ClientUtils;
 import dev.stormy.client.utils.player.PlayerUtils;
@@ -23,6 +24,7 @@ public class Stealer extends Module {
 
     public Stealer() {
         super("Stealer", ModuleCategory.Player, 0);
+        this.registerSetting(new DescriptionSetting("No logic yet"));
         this.registerSetting(delay = new DoubleSliderSetting("Delay", 0, 1000, 0, 1000, 1));
     }
 

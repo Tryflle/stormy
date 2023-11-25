@@ -2,7 +2,6 @@ package dev.stormy.client.module.modules.combat;
 
 import dev.stormy.client.module.Module;
 import dev.stormy.client.module.setting.impl.DescriptionSetting;
-import dev.stormy.client.utils.Utils;
 import dev.stormy.client.utils.player.PlayerUtils;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C03PacketPlayer;

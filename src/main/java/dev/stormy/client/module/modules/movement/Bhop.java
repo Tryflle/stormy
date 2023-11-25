@@ -1,18 +1,16 @@
 package dev.stormy.client.module.modules.movement;
 
-import dev.stormy.client.main.Stormy;
 import dev.stormy.client.module.Module;
 import dev.stormy.client.module.setting.impl.ComboSetting;
 import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.SliderSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
-import dev.stormy.client.utils.Utils;
 import dev.stormy.client.utils.player.PlayerUtils;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
 import net.weavemc.loader.api.event.PacketEvent;
-import net.weavemc.loader.api.event.TickEvent;
 import net.weavemc.loader.api.event.SubscribeEvent;
+import net.weavemc.loader.api.event.TickEvent;
 
 @SuppressWarnings("unused")
 public class Bhop extends Module {
@@ -31,8 +29,6 @@ public class Bhop extends Module {
         this.registerSetting(as = new SliderSetting("Air Speed (New)", 1.0D, 1.0D, 5.0D, 0.01D));
         this.registerSetting(hitRec = new TickSetting("Slow on hit recieve (New)", true));
         this.registerSetting(SpeedMode = new ComboSetting<>("Mode", mode.New));
-
-        this.setSuffix(SpeedMode.getMode().name());
     }
 
     public void onDisable() {

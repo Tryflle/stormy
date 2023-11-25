@@ -4,7 +4,6 @@ import dev.stormy.client.main.Stormy;
 import dev.stormy.client.module.Module;
 import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.SliderSetting;
-import dev.stormy.client.utils.Utils;
 import dev.stormy.client.utils.client.ClientUtils;
 import dev.stormy.client.utils.player.PlayerUtils;
 import me.tryfle.stormy.events.DrawBlockHighlightEvent;
@@ -32,8 +31,6 @@ public class AutoPlace extends Module {
       super("AutoPlace", ModuleCategory.Player, 0);
       this.registerSetting(new DescriptionSetting("Automatically places blocks under you."));
       this.registerSetting(frameDelay = new SliderSetting("Frame delay (fps/80)", 8.0D, 0.0D, 30.0D, 1.0D));
-
-      this.setSuffix(String.valueOf(frameDelay.getInput()));
    }
 
    @Override

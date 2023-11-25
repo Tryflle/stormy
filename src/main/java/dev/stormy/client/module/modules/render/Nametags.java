@@ -4,7 +4,6 @@ import dev.stormy.client.module.Module;
 import dev.stormy.client.module.modules.client.AntiBot;
 import dev.stormy.client.module.setting.impl.SliderSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
-import dev.stormy.client.utils.Utils;
 import dev.stormy.client.utils.math.MathUtils;
 import me.tryfle.stormy.events.RenderLabelEvent;
 import net.minecraft.client.renderer.GlStateManager;

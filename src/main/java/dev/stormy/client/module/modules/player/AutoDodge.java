@@ -3,7 +3,6 @@ package dev.stormy.client.module.modules.player;
 import dev.stormy.client.module.Module;
 import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
-import dev.stormy.client.utils.Utils;
 import dev.stormy.client.utils.player.PlayerUtils;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.client.network.NetworkPlayerInfo;

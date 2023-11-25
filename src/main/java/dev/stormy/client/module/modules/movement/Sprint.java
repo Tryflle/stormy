@@ -6,7 +6,6 @@ import dev.stormy.client.utils.player.PlayerUtils;
 import net.weavemc.loader.api.event.TickEvent;
 import net.weavemc.loader.api.event.SubscribeEvent;
 import dev.stormy.client.module.Module;
-import dev.stormy.client.utils.Utils;
 import net.minecraft.client.settings.KeyBinding;
 
 public class Sprint extends Module {

@@ -5,7 +5,6 @@ import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.SliderSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
 import dev.stormy.client.utils.game.MouseManager;
-import dev.stormy.client.utils.Utils;
 import dev.stormy.client.utils.player.PlayerUtils;
 import net.minecraft.util.ChatComponentText;
 import net.weavemc.loader.api.event.SubscribeEvent;
