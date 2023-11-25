@@ -9,14 +9,15 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class ClientConfig {
    private final File configFile;
    private final File weaveDir = new File(System.getProperty("user.home"), ".weave");
-   private final File configDir = new File(weaveDir, "raven");;
-   private final String fileName = "client.rcfg";
+   private final File configDir = new File(weaveDir, "stormy");;
+   private final String fileName = "client.scfg";
    private final String clickGuiPosPrefix = "clickgui-pos~ ";
    private final String loadedConfigPrefix = "loaded-cfg~ ";
 
@@ -36,7 +37,7 @@ public class ClientConfig {
    }
 
    public void saveConfig() {
-      List<String> config = new java.util.ArrayList<>();
+      List<String> config = new ArrayList<>();
       config.add(clickGuiPosPrefix + getClickGuiPos());
       config.add(loadedConfigPrefix + Stormy.configManager.getConfig().getName());
       config.add(ArrayListModule.HUDX_prefix + ArrayListModule.getHudX());
