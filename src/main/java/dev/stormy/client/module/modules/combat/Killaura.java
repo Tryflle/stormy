@@ -16,7 +16,6 @@ import net.minecraft.util.MovingObjectPosition;
 import net.weavemc.loader.api.event.*;
 import org.lwjgl.input.Mouse;
 
-import java.util.Objects;
 import java.util.Optional;
 
 @SuppressWarnings("unused")
@@ -43,6 +42,10 @@ public class Killaura extends Module {
         this.registerSetting(targetESP = new TickSetting("ESP", false));
     }
 
+    @Override
+    public void onDisable() {
+        target = Optional.empty();
+    }
     @SubscribeEvent
     public void setTarget(TickEvent.Pre e) {
         if (PlayerUtils.isPlayerInGame()) {
