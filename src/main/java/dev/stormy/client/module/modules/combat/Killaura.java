@@ -16,6 +16,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.weavemc.loader.api.event.*;
 import org.lwjgl.input.Mouse;
 
+import java.util.Objects;
 import java.util.Optional;
 
 @SuppressWarnings("unused")
@@ -33,7 +34,7 @@ public class Killaura extends Module {
         this.registerSetting(new DescriptionSetting("Probably doesn't bypass much."));
         this.registerSetting(range = new SliderSetting("Range", 3, 3, 6, 0.1));
         this.registerSetting(frequency = new SliderSetting("CPS", 10, 1, 20, 0.5));
-        this.registerSetting(hurtTimeAmt = new SliderSetting("Ignore before hurt time", 0, 0, 20, 1));
+        this.registerSetting(hurtTimeAmt = new SliderSetting("Ignore before hurt time", 1, 1, 20, 1));
         this.registerSetting(rotRand = new SliderSetting("Rotation Randomization", 2, 0, 3, .01));
         this.registerSetting(rots = new TickSetting("Rotations (for bypassing)", false));
         this.registerSetting(whenLooking = new TickSetting("Only when looking at player", false));
@@ -56,7 +57,7 @@ public class Killaura extends Module {
         if (!whenLooking.isToggled()) return false;
         MovingObjectPosition result = mc.objectMouseOver;
         if (result != null && result.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && result.entityHit instanceof EntityPlayer targetPlayer) {
-            return whenLooking.isToggled() && PlayerUtils.lookingAtPlayer(mc.thePlayer, targetPlayer, range.getInput());
+            return whenLooking.isToggled() && PlayerUtils.lookingAtPlayer(mc.thePlayer, targetPlayer, range.getInput() + 1);
         }
         else return false;
     }
@@ -70,6 +71,7 @@ public class Killaura extends Module {
             if (target.isPresent()) {
                 if (mc.thePlayer.isBlocking() || mc.thePlayer.isEating()) return;
                 if (whenLooking.isToggled() && !aBooleanCheck()) return;
+                if (target.get().deathTime > 0) return;
                 mc.thePlayer.swingItem();
                 mc.playerController.attackEntity(mc.thePlayer, target.get());
                 timer.reset();
