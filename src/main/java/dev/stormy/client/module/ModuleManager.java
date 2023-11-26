@@ -59,6 +59,7 @@ public class ModuleManager {
       addModule(new Strafe());
       addModule(new Criticals());
       addModule(new Stealer());
+      addModule(new Manager());
 
       initialized = true;
    }
