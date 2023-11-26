@@ -9,4 +9,5 @@
 Key:
 - ❌ = incomplete/unsatisfactory
 - ✅ = implemented and functional
-![image](https://github.com/Tryflle/stormy/assets/111710533/13047953-d1aa-4e5d-b8c5-d75fd2f8839e)
+![image](https://github.com/Tryflle/stormy/assets/111710533/8df15e5e-7d1c-4bfa-99ec-ab3fbe83cb2c)
+
