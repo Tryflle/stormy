@@ -60,6 +60,7 @@ public class ModuleManager {
       addModule(new Criticals());
       addModule(new Stealer());
       addModule(new Manager());
+      addModule(new WTap());
 
       initialized = true;
    }
