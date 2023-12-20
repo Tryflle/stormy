@@ -5,12 +5,10 @@ import dev.stormy.client.module.setting.impl.DescriptionSetting;
 import dev.stormy.client.module.setting.impl.SliderSetting;
 import dev.stormy.client.utils.packet.PacketUtils;
 import dev.stormy.client.utils.packet.TimedPacket;
-import dev.stormy.client.utils.Utils;
 import dev.stormy.client.utils.player.PlayerUtils;
 import net.minecraft.network.Packet;
 import net.weavemc.loader.api.event.*;
 
-import java.util.Iterator;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 @SuppressWarnings("unused")
@@ -20,7 +18,7 @@ public class Backtrack extends Module {
 
     public Backtrack() {
         super("Backtrack", ModuleCategory.Combat, 0);
-        this.registerSetting(new DescriptionSetting("WORK IN PROGRESS"));
+        this.registerSetting(new DescriptionSetting("Slighly dysfunctional"));
         this.registerSetting(spoofms = new SliderSetting("Ping in ms", 80.0, 30.0, 1000.0, 5.0));
     }
 
@@ -36,26 +34,40 @@ public class Backtrack extends Module {
             Packet<?> packet = e.getPacket();
             incomingPackets.add(new TimedPacket(packet, System.currentTimeMillis()));
             e.setCancelled(true);
-        } catch (Exception exception) {
-            exception.printStackTrace();
-        }
+        } catch (Exception ignored) {}
     }
 
     @SubscribeEvent
     public void packetHandler(RenderHandEvent e) {
         if (!PlayerUtils.isPlayerInGame()) return;
         final long time = System.currentTimeMillis();
-        Iterator<TimedPacket> incomingIterator = incomingPackets.iterator();
         try {
-            while (incomingIterator.hasNext()) {
-                TimedPacket timedPacket = incomingIterator.next();
+            incomingPackets.removeIf(timedPacket -> {
                 if (time - timedPacket.time() >= spoofms.getInput()) {
-                    PacketUtils.handle(timedPacket.packet(), true);
-                    incomingIterator.remove();
+                    PacketUtils.handle(timedPacket.packet(), false);
+                    return true;
                 }
-            }
-        } catch (Exception exception) {
-            exception.printStackTrace();
+                return false;
+            });
+        } catch (Exception ignored) {}
+    }
+
+    @Override
+    public void onEnable() {
+        incomingPackets.clear();
+    }
+
+    @Override
+    public void onDisable() {
+        if (PlayerUtils.isPlayerInGame()) {
+            try {
+                incomingPackets.removeIf(timedPacket -> {
+                    PacketUtils.handle(timedPacket.packet(), false);
+                    return true;
+                });
+            } catch (Exception ignored) {}
         }
+        incomingPackets.clear();
+        EventBus.unsubscribe(this);
     }
 }
