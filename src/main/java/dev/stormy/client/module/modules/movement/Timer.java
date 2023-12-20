@@ -25,12 +25,10 @@ public class Timer extends Module {
             mc.timer.timerSpeed = 1.0f;
             return;
          }
-
          mc.timer.timerSpeed = (float) speed.getInput();
       } else {
          mc.timer.timerSpeed = 1.0f;
       }
-
    }
 
    @Override

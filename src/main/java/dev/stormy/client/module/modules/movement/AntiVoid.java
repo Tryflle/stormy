@@ -15,7 +15,6 @@ public class AntiVoid extends Module {
     public final SliderSetting fallDist;
     public static TickSetting AutoDisable;
 
-
     public AntiVoid() {
         super("AntiVoid", ModuleCategory.Movement, 0);
         this.registerSetting(new DescriptionSetting("Prevents falling in the void."));
@@ -49,4 +48,3 @@ public class AntiVoid extends Module {
        NCP, Karhu
     }
 }
-

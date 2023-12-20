@@ -28,7 +28,7 @@ public class WTap extends Module {
         this.registerSetting(delay = new DoubleSliderSetting("Delay", 50.0D, 100.0D, 0.0D, 300.0D, 5.0D));
     }
 
-    int wkey = mc.gameSettings.keyBindForward.getKeyCode();
+    private final int wkey = mc.gameSettings.keyBindForward.getKeyCode();
 
     public boolean isLookingAtPlayer() {
         MovingObjectPosition result = mc.objectMouseOver;

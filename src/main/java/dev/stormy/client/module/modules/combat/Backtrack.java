@@ -24,7 +24,6 @@ public class Backtrack extends Module {
         this.registerSetting(spoofms = new SliderSetting("Ping in ms", 80.0, 30.0, 1000.0, 5.0));
     }
 
-
     @SubscribeEvent
     public void onTickDisabler(TickEvent e) {
         if (!PlayerUtils.isPlayerInGame()) this.disable();

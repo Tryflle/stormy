@@ -39,11 +39,13 @@ public class RightClicker extends Module {
          return noConsumables.isToggled() && (mc.thePlayer.getHeldItem().getItem() instanceof ItemFood || mc.thePlayer.getHeldItem().getItem() instanceof ItemPotion);
       } else return false;
    }
+
    public boolean isRod() {
       if (mc.thePlayer.getHeldItem() != null) {
          return noRod.isToggled() && mc.thePlayer.getHeldItem().getItem() instanceof net.minecraft.item.ItemFishingRod;
       } else return false;
    }
+
    public boolean isBow() {
       if (mc.thePlayer.getHeldItem() != null) {
          return noBow.isToggled() && mc.thePlayer.getHeldItem().getItem() instanceof net.minecraft.item.ItemBow;
@@ -72,7 +74,6 @@ public class RightClicker extends Module {
 
       }
    }
-
 
    public void randomizer() {
       double random = Utils.Java.randomInt(0, 2);

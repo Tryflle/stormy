@@ -90,7 +90,6 @@ public class AutoClicker extends Module {
         }
     }
 
-
     public void randomizer() {
         double random = Utils.Java.randomInt(0, 4);
          shouldClick = random >= 0.5;
@@ -108,7 +107,5 @@ public class AutoClicker extends Module {
             delaying = false;
             shouldClick = false;
         }
-
-
     }
 }

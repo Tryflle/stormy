@@ -24,7 +24,6 @@ public class ClickAssist extends Module {
    public Robot robot;
    private int cps;
 
-
    public ClickAssist() {
       super("ClickAssist", ModuleCategory.Combat, 0);
       this.registerSetting(new DescriptionSetting("Chance to double click."));

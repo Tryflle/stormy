@@ -20,7 +20,6 @@ public class Bhop extends Module {
     public ComboSetting<mode> SpeedMode;
     public boolean incomingVelo = false;
 
-
     public Bhop() {
         super("Bhop", ModuleCategory.Movement, 0);
         this.registerSetting(new DescriptionSetting("Bunny Hop"));
@@ -46,7 +45,6 @@ public class Bhop extends Module {
         }
         incomingVelo = false;
     }
-
 
     @SubscribeEvent
     public void Stupidity(TickEvent e) {
@@ -94,4 +92,3 @@ public class Bhop extends Module {
         Old, New
     }
 }
-

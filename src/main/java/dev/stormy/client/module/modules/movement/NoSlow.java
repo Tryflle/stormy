@@ -17,11 +17,12 @@ import net.weavemc.loader.api.event.SubscribeEvent;
 import dev.stormy.client.module.Module;
 import net.weavemc.loader.api.event.TickEvent;
 
+@SuppressWarnings("unused")
 public class NoSlow extends Module {
    public static SliderSetting speed;
    public static TickSetting autosprint, noweapons, noconsumables;
    public static ComboSetting<modes> mode;
-   public TimerUtils timer = new TimerUtils();
+   private TimerUtils timer = new TimerUtils();
    int rmb = mc.gameSettings.keyBindUseItem.getKeyCode();
    int sprint = mc.gameSettings.keyBindSprint.getKeyCode();
    public boolean shouldFinishBlock = false;
@@ -45,6 +46,7 @@ public class NoSlow extends Module {
       mc.thePlayer.movementInput.moveForward *= (100.0F - (float) speed.getInput()) / 100.0F;
       mc.thePlayer.movementInput.moveStrafe *= (100.0F - (float) speed.getInput()) / 100.0F;
       if (autosprint.isToggled() && mc.gameSettings.keyBindSprint.isKeyDown() && !mc.thePlayer.isSprinting() && PlayerUtils.isPlayerMoving()) {
+         shouldFinishBlock = false;
          KeyBinding.setKeyBindState(rmb, false);
          KeyBinding.onTick(rmb);
          if (timer.hasReached(100 + Utils.Java.randomInt(-10, 10))) {
@@ -58,7 +60,6 @@ public class NoSlow extends Module {
    @SubscribeEvent
    public void reBlock(TickEvent e) {
       if (mode.getMode() != modes.Regular && shouldFinishBlock && timer.hasReached(100 + Utils.Java.randomInt(-10, 10))) {
-         shouldFinishBlock = false;
          KeyBinding.setKeyBindState(rmb, true);
          KeyBinding.onTick(rmb);
          timer.reset();
