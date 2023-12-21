@@ -18,8 +18,8 @@ public class Backtrack extends Module {
 
     public Backtrack() {
         super("Backtrack", ModuleCategory.Combat, 0);
-        this.registerSetting(new DescriptionSetting("Slighly dysfunctional"));
-        this.registerSetting(spoofms = new SliderSetting("Ping in ms", 80.0, 30.0, 1000.0, 5.0));
+        this.registerSetting(new DescriptionSetting("Delays inbound packets"));
+        this.registerSetting(spoofms = new SliderSetting("Ping in ms", 50.0, 30.0, 400.0, 5.0));
     }
 
     @SubscribeEvent
@@ -41,15 +41,15 @@ public class Backtrack extends Module {
     public void packetHandler(RenderHandEvent e) {
         if (!PlayerUtils.isPlayerInGame()) return;
         final long time = System.currentTimeMillis();
-        try {
-            incomingPackets.removeIf(timedPacket -> {
+        incomingPackets.removeIf(timedPacket -> {
+            try {
                 if (time - timedPacket.time() >= spoofms.getInput()) {
                     PacketUtils.handle(timedPacket.packet(), false);
                     return true;
                 }
-                return false;
-            });
-        } catch (Exception ignored) {}
+            } catch (Exception ignored) {}
+            return false;
+        });
     }
 
     @Override
