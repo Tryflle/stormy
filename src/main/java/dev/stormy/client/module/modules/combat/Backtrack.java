@@ -47,6 +47,7 @@ public class Backtrack extends Module {
                     PacketUtils.handle(timedPacket.packet(), false);
                     return true;
                 }
+                return false;
             } catch (Exception ignored) {}
             return false;
         });
@@ -59,6 +60,7 @@ public class Backtrack extends Module {
 
     @Override
     public void onDisable() {
+        EventBus.unsubscribe(this);
         if (PlayerUtils.isPlayerInGame()) {
             try {
                 incomingPackets.removeIf(timedPacket -> {
@@ -68,6 +70,5 @@ public class Backtrack extends Module {
             } catch (Exception ignored) {}
         }
         incomingPackets.clear();
-        EventBus.unsubscribe(this);
     }
 }
