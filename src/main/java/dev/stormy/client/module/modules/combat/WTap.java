@@ -51,6 +51,7 @@ public class WTap extends Module {
             if (timer.hasReached(d)) {
                 KeyBinding.setKeyBindState(wkey, false);
                 KeyBinding.onTick(wkey);
+                timer.reset();
                 rePress();
             }
         }

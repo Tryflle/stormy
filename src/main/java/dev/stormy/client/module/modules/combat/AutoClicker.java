@@ -6,16 +6,14 @@ import dev.stormy.client.module.setting.impl.SliderSetting;
 import dev.stormy.client.module.setting.impl.TickSetting;
 import dev.stormy.client.utils.Utils;
 import dev.stormy.client.utils.asm.HookUtils;
+import dev.stormy.client.utils.math.TimerUtils;
 import dev.stormy.client.utils.player.PlayerUtils;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.util.BlockPos;
-import net.weavemc.loader.api.event.EventBus;
-import net.weavemc.loader.api.event.MouseEvent;
-import net.weavemc.loader.api.event.RenderHandEvent;
-import net.weavemc.loader.api.event.SubscribeEvent;
+import net.weavemc.loader.api.event.*;
 import org.lwjgl.input.Mouse;
 import net.minecraft.util.MovingObjectPosition;
 
@@ -25,8 +23,10 @@ public class AutoClicker extends Module {
     public static TickSetting breakBlocks, hitSelect;
     public static SliderSetting leftCPS;
     public boolean shouldClick, breakHeld = false;
+    TimerUtils t = new TimerUtils();
     long lastClickTime = 0;
     int lmb = mc.gameSettings.keyBindAttack.getKeyCode();
+    int delay = 0;
 
     public boolean delaying = false;
 
@@ -69,13 +69,18 @@ public class AutoClicker extends Module {
         return false;
     }
     @SubscribeEvent
-    public void bop(RenderHandEvent e) {
+    public void onRender(RenderHandEvent e) {
         randomizer();
         if (PlayerUtils.isPlayerInGame() && Mouse.isButtonDown(0) && shouldClick && mc.currentScreen == null) {
             if (hitSelect.isToggled() && !hitSelectLogic()) return;
             if (breakBlock()) return;
             long currentTime = System.currentTimeMillis();
-            int delay = 1000 / (int) leftCPS.getInput() + Utils.Java.randomInt(-3, 3);
+            if (t.hasReached(Utils.Java.randomInt(5000, 10000))) {
+                delay = (1000 / (int) (leftCPS.getInput() + (Utils.Java.randomInt(-4, 0))));
+                t.reset();
+            } else delay = (1000 / (int) (leftCPS.getInput() + (Utils.Java.randomInt(-3, 3))));
+            if (delay < 0) delay = (1000 / (int) (leftCPS.getInput() + (Utils.Java.randomInt(0, 3))));
+            //don't turn it too low or else you'll crash because im the best developer of the century
             if (currentTime - lastClickTime >= delay && !delaying) {
                 lastClickTime = currentTime;
                 KeyBinding.setKeyBindState(lmb, true);

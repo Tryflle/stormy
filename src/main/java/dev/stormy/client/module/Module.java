@@ -84,15 +84,14 @@ public abstract class Module {
 
    public void enable() {
       this.enabled = true;
-
-      this.onEnable();
       EventBus.subscribe(this);
+      this.onEnable();
    }
 
    public void disable() {
       this.enabled = false;
-      this.onDisable();
       EventBus.unsubscribe(this);
+      this.onDisable();
    }
 
    public void setToggled(boolean enabled) {
