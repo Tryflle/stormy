@@ -3,9 +3,17 @@ package dev.stormy.client.clickgui;
 import dev.stormy.client.module.modules.client.ClickGuiModule;
 
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Theme {
+
+    public static Map<String, Color> colors = new HashMap<>();
+
     public static Color getMainColor() {
+
+        if(customColors.containsKey(ClickGuiModule.clientTheme.getMode().toString()))
+
         String themeColor = ClickGuiModule.clientTheme.getMode().toString();
 
         switch (themeColor) {
