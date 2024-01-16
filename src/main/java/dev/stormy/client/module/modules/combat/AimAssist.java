@@ -1,3 +1,5 @@
+// User: AIDD, implement code #1 into code #2
+
 package dev.stormy.client.module.modules.combat;
 
 import dev.stormy.client.main.Stormy;
@@ -16,6 +18,9 @@ import net.minecraft.util.BlockPos;
 import net.weavemc.loader.api.event.SubscribeEvent;
 import org.lwjgl.input.Mouse;
 
+import java.util.Comparator;
+import java.util.stream.Stream;
+
 @SuppressWarnings("unused")
 public class AimAssist extends Module {
     public static SliderSetting speed, fov, distance;
@@ -33,7 +38,6 @@ public class AimAssist extends Module {
         this.registerSetting(aimInvis = new TickSetting("Aim at invis", false));
         this.registerSetting(breakBlocks = new TickSetting("Break Blocks", true));
     }
-
 
     @SubscribeEvent
     public void onUpdateCenter(LivingUpdateEvent e) {
@@ -61,17 +65,17 @@ public class AimAssist extends Module {
 
     public Entity getEnemy() {
         int fov = (int) AimAssist.fov.getInput();
-        for (EntityPlayer en : mc.theWorld.playerEntities) {
-            if (!isTarget(en)) {
-                continue;
-            } else if (!aimInvis.isToggled() && en.isInvisible()) {
-                continue;
-            } else if ((double) mc.thePlayer.getDistanceToEntity(en) > distance.getInput()) {
-                continue;
-            }
-            return en;
+        Stream<EntityPlayer> playerStream = mc.theWorld.playerEntities.stream().filter(this::isTarget);
+
+        if (!aimInvis.isToggled()) {
+            playerStream = playerStream.filter(en -> !en.isInvisible());
         }
-        return null;
+
+        playerStream = playerStream.filter(en -> mc.thePlayer.getDistanceToEntity(en) <= distance.getInput());
+
+        return playerStream
+                .min(Comparator.comparingDouble(en -> n(en)))
+                .orElse(null);
     }
 
     public static boolean fov(Entity entity, float fov) {
@@ -113,7 +117,6 @@ public class AimAssist extends Module {
     }
 
     public boolean isTarget(EntityPlayer en) {
-        if (en == mc.thePlayer) return false;
-        return en.deathTime == 0;
+        return en != mc.thePlayer && en.deathTime == 0;
     }
 }
