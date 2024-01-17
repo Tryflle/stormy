@@ -158,5 +158,30 @@ public class ClickGui extends GuiScreen {
     public ArrayList<CategoryComponent> getCategoryList() {
         return categoryList;
     }
+
+      public static ComboSetting<String> clientTheme; 
+
+    public static SliderSetting colorR;
+    public static SliderSetting colorG;
+    public static SliderSetting colorB;
+    public static SliderSetting colorA;
+
+    // When custom selected
+
+    colorR.setVisible(true); 
+    colorG.setVisible(true);
+    colorB.setVisible(true);
+    colorA.setVisible(true);
+
+    // Disable other options
+    clientTheme.setVisible(false);
+
+    // Update custom color when sliders change
+    public void updateCustomColor() {
+        Theme.setCustomColor("Custom", colorR.getValue(), colorG.getValue(), colorB.getValue(), colorA.getValue());
+    }
+
+}
+
 }
 
