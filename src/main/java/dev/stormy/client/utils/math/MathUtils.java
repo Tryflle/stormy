@@ -6,6 +6,7 @@ import java.util.Random;
 /**
  * @author sassan
  * 23.11.2023, 2023
+ * hi sassan
  */
 public class MathUtils implements IMethods {
     public static Random rand() {
@@ -21,8 +22,7 @@ public class MathUtils implements IMethods {
         }
     }
 
-    // will be implemented soon
-    public static int randomInt(double inputMin, double v) {
-        return (int) (Math.random() * (v - inputMin) + inputMin);
+    public static int randomInt(double inputMin, double inputMax) {
+        return (int) (Math.random() * (inputMax - inputMin) + inputMin);
     }
 }
