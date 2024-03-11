@@ -1,27 +1,33 @@
-package ravenweave.client.module.modules.combat;
+package dev.stormy.client.module.modules.combat;
 
+import dev.stormy.client.clickgui.Theme;
+import dev.stormy.client.module.Module;
+import dev.stormy.client.module.setting.impl.DescriptionSetting;
+import dev.stormy.client.module.setting.impl.SliderSetting;
+import dev.stormy.client.module.setting.impl.TickSetting;
+import dev.stormy.client.utils.math.TimerUtils;
+import dev.stormy.client.utils.Utils;
+import dev.stormy.client.utils.player.PlayerUtils;
+import me.tryfle.stormy.events.UpdateEvent;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.world.WorldSettings.GameType;
-import net.weavemc.loader.api.event.RenderWorldEvent;
-import net.weavemc.loader.api.event.SubscribeEvent;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.weavemc.loader.api.event.*;
 import org.lwjgl.input.Mouse;
-import ravenweave.client.event.impl.GameLoopEvent;
-import ravenweave.client.event.impl.LookEvent;
-import ravenweave.client.event.impl.MoveInputEvent;
-import ravenweave.client.event.impl.UpdateEvent;
-import ravenweave.client.module.Module;
-import ravenweave.client.module.modules.client.Targets;
-import ravenweave.client.module.setting.impl.ComboSetting;
-import ravenweave.client.module.setting.impl.DoubleSliderSetting;
-import ravenweave.client.module.setting.impl.SliderSetting;
-import ravenweave.client.module.setting.impl.TickSetting;
-import ravenweave.client.utils.CoolDown;
-import ravenweave.client.utils.Utils;
 
-import java.awt.*;
+import java.util.Optional;
 
-//todo change the clicking system
+@SuppressWarnings("unused")
+public class Killaura extends Module {
+    static Optional<EntityPlayer> target = Optional.empty();
+    public static SliderSetting range, frequency, hurtTimeAmt, rotRand;
+    public static TickSetting shouldBlock, targetESP, testSetting, alwaysAB, rots, whenLooking;
+    public TimerUtils timer = new TimerUtils();
+    public boolean delaying, isAttacking = false;
+    long lastClickTime = 0;
+    int rmb = mc.gameSettings.keyBindUseItem.getKeyCode();
+
 public class KillAura extends Module {
 
     private EntityPlayer target;
@@ -141,10 +147,7 @@ public class KillAura extends Module {
         e.setPitch(pitch);
     }
 
-    /**
-     * TODO: Recode whatever is below this and finish autoblock
-     * will do it in the near future when i get time to open my intellij
-     */
+ 
 
     private void ravenClick() {
         this.leftClickExecute(mc.gameSettings.keyBindAttack.getKeyCode());
