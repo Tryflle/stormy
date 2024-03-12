@@ -152,6 +152,6 @@ public class AutoClicker extends Module {
             if (delaying) {
                 finishDelay();
             }
-	    }
+        }
     }
 }
