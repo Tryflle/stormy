@@ -151,9 +151,7 @@ public class AutoClicker extends Module {
                 delaying = true;
             }
             if (delaying) {
-                long currentTime = System.currentTimeMillis();
-                int newdelay = Utils.Java.randomInt(30, 120);
-                if (currentTime - lastClickTime >= newdelay) {
+                if (currentTime - lastClickTime >= Utils.Java.randomInt(30, 120)) {
                     lastClickTime = currentTime;
                     delaying = false;
                     shouldClick = false;
