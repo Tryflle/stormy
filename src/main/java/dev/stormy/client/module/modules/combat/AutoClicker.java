@@ -133,7 +133,7 @@ public class AutoClicker extends Module {
         }
     }
     public void doInvClick() {
-        if (((mc.currentScreen instanceof GuiInventory) || (mc.currentScreen instanceof GuiChest)) && Mouse.isButtonDown(0) && Keyboard.isKeyDown(54) && Keyboard.isKeyDown(42) && shouldClick) {
+        if (((mc.currentScreen instanceof GuiInventory) || (mc.currentScreen instanceof GuiChest)) && (Keyboard.isKeyDown(54) || Keyboard.isKeyDown(42)) && Mouse.isButtonDown(0) && shouldClick) {
             long currentTime = System.currentTimeMillis();
             if (t.hasReached(Utils.Java.randomInt(5000, 10000))) {
                 delay = (1000 / (int) (leftCPS.getInput() + (Utils.Java.randomInt(-4, 0))));
