@@ -15,7 +15,7 @@ import java.util.Objects;
 
 
 public class ConfigManager {
-    private final File configDirectory = new File(System.getProperty("user.home") + File.separator + ".weave" + File.separator + "raven");
+    private final File configDirectory = new File(System.getProperty("user.home") + File.separator + ".weave" + File.separator + "stormy");
 
     private Config config;
     private final ArrayList<Config> configs = new ArrayList<>();
