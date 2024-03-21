@@ -61,7 +61,8 @@ public class ModuleManager {
       addModule(new Stealer());
       addModule(new Manager());
       addModule(new WTap());
-
+      addmodule(new LegitAura());
+      
       initialized = true;
    }
 
